@@ -57,6 +57,11 @@ interface BottomTabNavigatorProps {
   onNavigatePaymentHistory?: () => void;
   onNavigateNotifications?: () => void;
   onNavigateChat?: () => void;
+  onNavigatePrivacy?: () => void;
+  onNavigateLanguage?: () => void;
+  onNavigateHelp?: () => void;
+  onNavigateTerms?: () => void;
+  onSignOut?: () => void;
 }
 
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
@@ -73,6 +78,11 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   onNavigatePaymentHistory,
   onNavigateNotifications,
   onNavigateChat,
+  onNavigatePrivacy,
+  onNavigateLanguage,
+  onNavigateHelp,
+  onNavigateTerms,
+  onSignOut,
 }) => {
   return (
     <Tab.Navigator
@@ -163,6 +173,11 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
             onNavigatePaymentHistory={onNavigatePaymentHistory}
             onNavigateNotifications={onNavigateNotifications}
             onNavigateChat={onNavigateChat}
+            onNavigatePrivacy={onNavigatePrivacy}
+            onNavigateLanguage={onNavigateLanguage}
+            onNavigateHelp={onNavigateHelp}
+            onNavigateTerms={onNavigateTerms}
+            onSignOut={onSignOut}
           />
         )}
       </Tab.Screen>

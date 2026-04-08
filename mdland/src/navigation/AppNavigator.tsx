@@ -27,6 +27,10 @@ import PaymentHistoryScreen from '../screens/PaymentHistoryScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import ChatListScreen from '../screens/ChatListScreen';
 import ChatRoomScreen from '../screens/ChatRoomScreen';
+import PrivacySecurityScreen from '../screens/PrivacySecurityScreen';
+import LanguageRegionScreen from '../screens/LanguageRegionScreen';
+import HelpSupportScreen from '../screens/HelpSupportScreen';
+import TermsPoliciesScreen from '../screens/TermsPoliciesScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -103,6 +107,11 @@ const AppNavigator: React.FC = () => {
               onNavigatePaymentHistory={() => props.navigation.navigate('PaymentHistory')}
               onNavigateNotifications={() => props.navigation.navigate('Notifications')}
               onNavigateChat={() => props.navigation.navigate('ChatList')}
+              onNavigatePrivacy={() => props.navigation.navigate('Privacy')}
+              onNavigateLanguage={() => props.navigation.navigate('Language')}
+              onNavigateHelp={() => props.navigation.navigate('Help')}
+              onNavigateTerms={() => props.navigation.navigate('Terms')}
+              onSignOut={() => setIsAuthenticated(false)}
             />
           )}
         </Stack.Screen>
@@ -370,6 +379,31 @@ const AppNavigator: React.FC = () => {
               contact={props.route.params.contact}
               onBack={() => props.navigation.goBack()}
             />
+          )}
+        </Stack.Screen>
+
+        {/* Settings Sub-Screens */}
+        <Stack.Screen name="Privacy" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PrivacySecurityScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Language" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <LanguageRegionScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Help" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <HelpSupportScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Terms" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <TermsPoliciesScreen onBack={() => props.navigation.goBack()} />
           )}
         </Stack.Screen>
       </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,8 +6,9 @@ import {
   ScrollView,
   Pressable,
   Image,
+  Modal,
 } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown, FadeOut } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -37,6 +38,11 @@ interface ProfileScreenProps {
   onNavigatePaymentHistory?: () => void;
   onNavigateNotifications?: () => void;
   onNavigateChat?: () => void;
+  onNavigatePrivacy?: () => void;
+  onNavigateLanguage?: () => void;
+  onNavigateHelp?: () => void;
+  onNavigateTerms?: () => void;
+  onSignOut?: () => void;
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({
@@ -44,9 +50,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onNavigatePaymentHistory,
   onNavigateNotifications,
   onNavigateChat,
+  onNavigatePrivacy,
+  onNavigateLanguage,
+  onNavigateHelp,
+  onNavigateTerms,
+  onSignOut,
 }) => {
   const insets = useSafeAreaInsets();
   const tierColor = TIER_COLORS[USER.tier];
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -121,6 +133,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   else if (item.key === 'paymentHistory') onNavigatePaymentHistory?.();
                   else if (item.key === 'notifications') onNavigateNotifications?.();
                   else if (item.key === 'chat') onNavigateChat?.();
+                  else if (item.key === 'privacy') onNavigatePrivacy?.();
+                  else if (item.key === 'language') onNavigateLanguage?.();
+                  else if (item.key === 'help') onNavigateHelp?.();
+                  else if (item.key === 'terms') onNavigateTerms?.();
                 }}
               >
                 <View style={styles.menuIcon}>
@@ -138,13 +154,68 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
         {/* Logout */}
         <Animated.View entering={FadeInDown.delay(700)} style={styles.logoutContainer}>
-          <Pressable style={styles.logoutButton}>
+          <Pressable style={styles.logoutButton} onPress={() => setShowSignOutModal(true)}>
             <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
             <Text style={styles.logoutText}>Sign Out</Text>
           </Pressable>
-          <Text style={styles.versionText}>MDLAND v1.0.0</Text>
+          <Text style={styles.versionText}>MDLAND v1.0.0 · Build 2026.04</Text>
         </Animated.View>
       </ScrollView>
+
+      {/* Sign Out Confirmation Modal */}
+      <Modal visible={showSignOutModal} transparent animationType="none" statusBarTranslucent>
+        <Animated.View
+          entering={FadeInDown.duration(200)}
+          exiting={FadeOut.duration(200)}
+          style={styles.modalOverlay}
+        >
+          <Animated.View entering={SlideInDown.springify()} style={[styles.modalCard, { shadowColor: '#000', shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.15, shadowRadius: 20, elevation: 16 }]}>
+
+            {/* Icon */}
+            <View style={styles.modalIconWrap}>
+              <LinearGradient colors={[COLORS.error + '25', COLORS.error + '08']} style={styles.modalIconBg}>
+                <Ionicons name="log-out-outline" size={32} color={COLORS.error} />
+              </LinearGradient>
+            </View>
+
+            <Text style={styles.modalTitle}>Keluar dari Akun?</Text>
+            <Text style={styles.modalSubtitle}>
+              Anda akan keluar dari akun MDLAND ini. Data pemesanan & preferensi tetap tersimpan.
+            </Text>
+
+            {/* User Preview */}
+            <View style={styles.modalUserPreview}>
+              <Image source={{ uri: USER.avatar }} style={styles.modalAvatar} />
+              <View>
+                <Text style={styles.modalUserName}>{USER.name}</Text>
+                <Text style={styles.modalUserEmail}>{USER.email}</Text>
+              </View>
+            </View>
+
+            {/* Actions */}
+            <Pressable
+              style={styles.signOutConfirmBtn}
+              onPress={() => {
+                setShowSignOutModal(false);
+                onSignOut?.();
+              }}
+            >
+              <LinearGradient
+                colors={[COLORS.error, '#FF453A']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                style={styles.signOutConfirmGrad}
+              >
+                <Ionicons name="log-out-outline" size={18} color={COLORS.white} />
+                <Text style={styles.signOutConfirmText}>Ya, Keluar Sekarang</Text>
+              </LinearGradient>
+            </Pressable>
+
+            <Pressable style={styles.cancelBtn} onPress={() => setShowSignOutModal(false)}>
+              <Text style={styles.cancelBtnText}>Batal, Tetap Di Sini</Text>
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
+      </Modal>
     </View>
   );
 };
@@ -210,6 +281,45 @@ const styles = StyleSheet.create({
   },
   logoutText: { ...TYPOGRAPHY.bodyMedium, color: COLORS.error },
   versionText: { ...TYPOGRAPHY.caption, color: COLORS.gray300, marginTop: SPACING.md },
+
+  // Sign Out Modal
+  modalOverlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 32, borderTopRightRadius: 32,
+    paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl, paddingBottom: 40,
+    alignItems: 'center',
+  },
+  modalIconWrap: { marginBottom: SPACING.lg },
+  modalIconBg: {
+    width: 72, height: 72, borderRadius: 36,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  modalTitle: { ...TYPOGRAPHY.h3, color: COLORS.gray800, textAlign: 'center', marginBottom: SPACING.sm },
+  modalSubtitle: {
+    ...TYPOGRAPHY.body, color: COLORS.gray400, textAlign: 'center',
+    lineHeight: 22, marginBottom: SPACING.xl,
+  },
+  modalUserPreview: {
+    flexDirection: 'row', alignItems: 'center', gap: SPACING.md,
+    backgroundColor: COLORS.gray50, borderRadius: RADIUS.xl,
+    paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md,
+    alignSelf: 'stretch', marginBottom: SPACING.xxl,
+  },
+  modalAvatar: { width: 44, height: 44, borderRadius: 22 },
+  modalUserName: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray800, fontWeight: '600' },
+  modalUserEmail: { ...TYPOGRAPHY.bodySm, color: COLORS.gray400 },
+  signOutConfirmBtn: { borderRadius: RADIUS.xl, overflow: 'hidden', alignSelf: 'stretch' },
+  signOutConfirmGrad: {
+    height: 54, flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'center', gap: SPACING.sm,
+  },
+  signOutConfirmText: { ...TYPOGRAPHY.bodyMedium, color: COLORS.white, fontWeight: '700' },
+  cancelBtn: { paddingVertical: SPACING.lg, alignSelf: 'stretch', alignItems: 'center' },
+  cancelBtnText: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray500 },
 });
 
 export default ProfileScreen;
