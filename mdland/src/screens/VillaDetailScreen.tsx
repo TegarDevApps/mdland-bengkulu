@@ -131,7 +131,7 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
             viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
             keyExtractor={(_: any, i: number) => i.toString()}
             renderItem={({ item }: any) => (
-              <Image source={{ uri: item }} style={styles.carouselImage} />
+              <Image source={item} style={styles.carouselImage} />
             )}
           />
           {/* Dots */}
@@ -223,7 +223,7 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
                     {similarVillas.map((sv, index) => (
                       <Animated.View key={sv.id} entering={FadeInDown.delay(index * 60).springify()}>
                         <View style={styles.similarCard}>
-                          <Image source={{ uri: sv.images[0] }} style={styles.similarImage} />
+                          <Image source={sv.images[0]} style={styles.similarImage} />
                           <View style={styles.similarInfo}>
                             <Text style={styles.similarName} numberOfLines={1}>{sv.name}</Text>
                             <View style={styles.similarMeta}>

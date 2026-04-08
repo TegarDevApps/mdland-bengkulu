@@ -378,7 +378,7 @@ const MapViewScreen: React.FC<MapViewScreenProps> = ({
         >
           <View style={styles.sheetHandle} />
           <View style={styles.sheetRow}>
-            <Image source={{ uri: selectedMarker.image }} style={styles.sheetImage} />
+            <Image source={selectedMarker.image as any} style={styles.sheetImage} />
             <View style={styles.sheetInfo}>
               <Text style={styles.sheetTitle} numberOfLines={1}>{selectedMarker.title}</Text>
               <Text style={styles.sheetCategory}>{selectedMarker.description}</Text>
@@ -426,7 +426,7 @@ const MapViewScreen: React.FC<MapViewScreenProps> = ({
         >
           <View style={styles.sheetHandle} />
           <View style={styles.sheetRow}>
-            <Image source={{ uri: selectedMarker.image }} style={styles.sheetImage} />
+            <Image source={selectedMarker.image as any} style={styles.sheetImage} />
             <View style={styles.sheetInfo}>
               <Text style={styles.sheetTitle} numberOfLines={1}>{selectedMarker.title}</Text>
               <Text style={styles.sheetCategory}>{selectedMarker.description}</Text>
@@ -493,7 +493,7 @@ const MapViewScreen: React.FC<MapViewScreenProps> = ({
         >
           <View style={styles.sheetHandle} />
           <View style={styles.sheetRow}>
-            <Image source={{ uri: selectedMarker.image }} style={styles.sheetImage} />
+            <Image source={selectedMarker.image as any} style={styles.sheetImage} />
             <View style={styles.sheetInfo}>
               <Text style={styles.sheetTitle} numberOfLines={1}>{selectedMarker.title}</Text>
               <Text style={styles.sheetCategory}>{selectedMarker.description}</Text>

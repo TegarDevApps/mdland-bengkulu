@@ -34,7 +34,7 @@ export const VillaCard: React.FC<VillaCardProps> = ({ villa, onPress, index = 0 
       onPressOut={() => { scale.value = withSpring(1); }}
       style={[styles.card, animatedStyle, SHADOWS.medium]}
     >
-      <Image source={{ uri: villa.images[0] }} style={styles.image} />
+      <Image source={villa.images[0]} style={styles.image} />
       {!villa.available && (
         <View style={styles.unavailableBadge}>
           <Text style={styles.unavailableText}>FULLY BOOKED</Text>

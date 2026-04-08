@@ -51,7 +51,7 @@ export const ResortCard: React.FC<ResortCardProps> = ({
         style={[styles.compactCard, animatedStyle]}
       >
         <ImageBackground
-          source={{ uri: resort.image }}
+          source={resort.image}
           style={styles.compactImage}
           imageStyle={{ borderRadius: RADIUS.lg }}
         >
@@ -77,7 +77,7 @@ export const ResortCard: React.FC<ResortCardProps> = ({
         style={[styles.mediumCard, animatedStyle]}
       >
         <ImageBackground
-          source={{ uri: resort.image }}
+          source={resort.image}
           style={styles.mediumImage}
           imageStyle={{ borderRadius: RADIUS.xl }}
         >
@@ -115,7 +115,7 @@ export const ResortCard: React.FC<ResortCardProps> = ({
       style={[styles.largeCard, animatedStyle, SHADOWS.large]}
     >
       <ImageBackground
-        source={{ uri: resort.image }}
+        source={resort.image}
         style={styles.largeImage}
         imageStyle={{ borderRadius: RADIUS.xxl }}
       >

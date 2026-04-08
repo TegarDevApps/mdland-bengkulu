@@ -30,7 +30,7 @@ const MyBookingsScreen: React.FC = () => {
     return (
       <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
         <Pressable style={styles.bookingCard}>
-          <Image source={{ uri: item.image }} style={styles.bookingImage} />
+          <Image source={item.image} style={styles.bookingImage} />
           <View style={styles.bookingContent}>
             <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
               <Ionicons name={status.icon as any} size={12} color={status.color} />

@@ -67,7 +67,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }) => {
           {/* Avatar Section */}
           <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.avatarSection}>
             <View style={styles.avatarContainer}>
-              <Image source={{ uri: USER.avatar }} style={styles.avatar} />
+              <Image source={USER.avatar} style={styles.avatar} />
               {isEditing && (
                 <Animated.View entering={SlideInDown.duration(300)} style={styles.cameraBtn}>
                   <Ionicons name="camera" size={16} color={COLORS.white} />

@@ -56,7 +56,7 @@ const FnBScreen: React.FC<FnBScreenProps> = ({ onNavigateOrder, onBack }) => {
               style={styles.restaurantCard}
               onPress={() => onNavigateOrder(restaurant)}
             >
-              <Image source={{ uri: restaurant.image }} style={styles.restaurantImage} />
+              <Image source={restaurant.image} style={styles.restaurantImage} />
               <View style={styles.restaurantOverlay}>
                 <View style={styles.ratingBadge}>
                   <Ionicons name="star" size={14} color={COLORS.accent} />

@@ -185,7 +185,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
                   onPress={() => onNavigateVilla(item)}
                   style={styles.villaCard}
                 >
-                  <Image source={{ uri: item.images[0] }} style={styles.villaCardImage} />
+                  <Image source={item.images[0]} style={styles.villaCardImage} />
                   <LinearGradient
                     colors={['transparent', 'rgba(0,0,0,0.7)']}
                     style={styles.villaCardGradient}
@@ -225,7 +225,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             renderItem={({ item, index }) => (
               <Animated.View entering={FadeInRight.delay(index * 80).springify()}>
                 <Pressable onPress={onNavigateWahana} style={styles.wahanaCard}>
-                  <Image source={{ uri: item.image }} style={styles.wahanaImage} />
+                  <Image source={item.image} style={styles.wahanaImage} />
                   <View style={styles.wahanaInfo}>
                     <Text style={styles.wahanaName} numberOfLines={1}>{item.name}</Text>
                     <Text style={styles.wahanaDuration}>{item.duration}</Text>

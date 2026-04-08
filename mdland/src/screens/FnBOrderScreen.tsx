@@ -78,7 +78,7 @@ const FnBOrderScreen: React.FC<FnBOrderScreenProps> = ({ restaurant, onBack, onC
     return (
       <Animated.View entering={FadeInDown.delay(index * 60).springify()}>
         <View style={styles.menuItem}>
-          <Image source={{ uri: item.image }} style={styles.menuImage} />
+          <Image source={item.image} style={styles.menuImage} />
           <View style={styles.menuContent}>
             {item.isSignature && (
               <View style={styles.signatureBadge}>

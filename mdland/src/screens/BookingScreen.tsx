@@ -59,7 +59,7 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
       >
         {/* Villa Summary */}
         <Animated.View entering={FadeInDown.delay(100)} style={styles.villaCard}>
-          <Image source={{ uri: villa.images[0] }} style={styles.villaImage} />
+          <Image source={villa.images[0]} style={styles.villaImage} />
           <View style={styles.villaInfo}>
             <Text style={styles.villaName}>{villa.name}</Text>
             <Text style={styles.resortName}>{resortName}</Text>

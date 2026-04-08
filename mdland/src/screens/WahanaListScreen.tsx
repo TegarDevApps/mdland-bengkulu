@@ -98,7 +98,7 @@ const WahanaListScreen: React.FC<WahanaListScreenProps> = ({ onSelectWahana, onB
               style={styles.wahanaCard}
               onPress={() => onSelectWahana(item)}
             >
-              <Image source={{ uri: item.image }} style={styles.wahanaImage} />
+              <Image source={item.image} style={styles.wahanaImage} />
               <LinearGradient
                 colors={['transparent', 'rgba(0,0,0,0.6)']}
                 style={styles.wahanaGradient}

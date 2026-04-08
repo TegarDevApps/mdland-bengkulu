@@ -88,7 +88,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
         contentContainerStyle={{ paddingBottom: 130 }}
       >
         {/* Hero Image */}
-        <Image source={{ uri: wahana.image }} style={styles.heroImage} />
+        <Image source={wahana.image as any} style={styles.heroImage} />
 
         {/* Content Card */}
         <View style={styles.contentCard}>
@@ -159,7 +159,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
                     {similarWahana.map((sw, index) => (
                       <Animated.View key={sw.id} entering={FadeInDown.delay(index * 60).springify()}>
                         <View style={styles.similarCard}>
-                          <Image source={{ uri: sw.image }} style={styles.similarImage} />
+                          <Image source={sw.image as any} style={styles.similarImage} />
                           <View style={styles.similarInfo}>
                             <Text style={styles.similarName} numberOfLines={1}>{sw.name}</Text>
                             <View style={styles.similarMeta}>
@@ -294,13 +294,13 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
               <View style={styles.galleryGrid}>
                 <Animated.View entering={FadeInDown.delay(0).springify()}>
                   <Pressable onPress={() => { setGalleryIndex(0); setGalleryVisible(true); }}>
-                    <Image source={{ uri: wahana.image }} style={styles.galleryHero} />
+                    <Image source={wahana.image as any} style={styles.galleryHero} />
                   </Pressable>
                 </Animated.View>
                 {[wahana.image, wahana.image].map((img, i) => (
                   <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
                     <Pressable onPress={() => { setGalleryIndex(i + 1); setGalleryVisible(true); }}>
-                      <Image source={{ uri: img }} style={styles.galleryThumb} />
+                      <Image source={img as any} style={styles.galleryThumb} />
                     </Pressable>
                   </Animated.View>
                 ))}
@@ -325,7 +325,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             showsHorizontalScrollIndicator={false}
             keyExtractor={(_, i) => i.toString()}
             renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.modalImage} resizeMode="contain" />
+              <Image source={item as any} style={styles.modalImage} resizeMode="contain" />
             )}
           />
         </View>

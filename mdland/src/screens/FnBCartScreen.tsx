@@ -50,7 +50,7 @@ const FnBCartScreen: React.FC<FnBCartScreenProps> = ({ items, total, onBack, onC
           <Text style={styles.cardTitle}>Detail Pesanan</Text>
           {items.map(({ item, qty }, index) => (
             <View key={item.id} style={[styles.orderItem, index > 0 && styles.orderItemBorder]}>
-              <Image source={{ uri: item.image }} style={styles.itemThumb} />
+              <Image source={item.image} style={styles.itemThumb} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.itemName}>{item.name}</Text>
                 <Text style={styles.itemQty}>{qty}x @ {formatPrice(item.price)}</Text>

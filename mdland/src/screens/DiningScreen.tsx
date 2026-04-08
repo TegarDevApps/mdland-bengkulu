@@ -40,7 +40,7 @@ const DiningScreen: React.FC = () => {
   const renderMenuItem = ({ item, index }: { item: DiningItem; index: number }) => (
     <Animated.View entering={FadeInDown.delay(index * 60).springify()}>
       <Pressable style={styles.menuItem}>
-        <Image source={{ uri: item.image }} style={styles.menuItemImage} />
+        <Image source={item.image} style={styles.menuItemImage} />
         <View style={styles.menuItemContent}>
           <View style={styles.menuItemHeader}>
             <Text style={styles.menuItemName} numberOfLines={1}>{item.name}</Text>
@@ -86,7 +86,7 @@ const DiningScreen: React.FC = () => {
               activeRestaurant.id === restaurant.id && styles.restaurantCardActive,
             ]}
           >
-            <Image source={{ uri: restaurant.image }} style={styles.restaurantImage} />
+            <Image source={restaurant.image} style={styles.restaurantImage} />
             <View style={styles.restaurantInfo}>
               <Text style={[
                 styles.restaurantName,

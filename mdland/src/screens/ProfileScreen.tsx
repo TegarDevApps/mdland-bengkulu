@@ -67,7 +67,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Profile Header */}
         <Animated.View entering={FadeInDown.springify()} style={styles.profileHeader}>
-          <Image source={{ uri: USER.avatar }} style={styles.avatar} />
+          <Image source={USER.avatar} style={styles.avatar} />
           <Text style={styles.userName}>{USER.name}</Text>
           <Text style={styles.userEmail}>{USER.email}</Text>
           <View style={[styles.tierBadge, { backgroundColor: tierColor + '15' }]}>
@@ -185,7 +185,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
             {/* User Preview */}
             <View style={styles.modalUserPreview}>
-              <Image source={{ uri: USER.avatar }} style={styles.modalAvatar} />
+              <Image source={USER.avatar} style={styles.modalAvatar} />
               <View>
                 <Text style={styles.modalUserName}>{USER.name}</Text>
                 <Text style={styles.modalUserEmail}>{USER.email}</Text>

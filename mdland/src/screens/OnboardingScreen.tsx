@@ -58,7 +58,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
   const renderItem = ({ item, index }: any) => (
     <View style={styles.slide}>
-      <ImageBackground source={{ uri: item.image }} style={styles.image}>
+      <ImageBackground source={item.image} style={styles.image}>
         <LinearGradient
           colors={['transparent', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.85)']}
           style={styles.gradient}

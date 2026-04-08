@@ -2,7 +2,7 @@ export interface Villa {
   id: string;
   name: string;
   description: string;
-  images: string[];
+  images: (string | number)[];
   pricePerNight: number;
   maxGuests: number;
   bedrooms: number;
@@ -17,7 +17,7 @@ export interface Wahana {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: string | number;
   price: number;
   duration: string;
   capacity: number;
@@ -45,7 +45,7 @@ export interface DiningItem {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: string | number;
   price: number;
   category: 'appetizer' | 'main' | 'dessert' | 'snack' | 'beverage' | 'cocktail';
   rating: number;
@@ -56,7 +56,7 @@ export interface Restaurant {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: string | number;
   cuisine: string;
   rating: number;
   priceRange: string;
@@ -77,7 +77,7 @@ export interface Booking {
   wahanaId?: string;
   wahanaName?: string;
   type: 'villa' | 'wahana' | 'food';
-  image: string;
+  image: string | number;
   checkIn?: string;
   checkOut?: string;
   date?: string;
@@ -90,7 +90,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  avatar: string;
+  avatar: string | number;
   memberSince: string;
   tier: 'silver' | 'gold' | 'platinum';
   bookingsCount: number;
@@ -102,7 +102,7 @@ export interface MapMarker {
   description: string;
   coordinate: { latitude: number; longitude: number };
   type: 'villa' | 'restaurant' | 'event' | 'wahana' | 'facility';
-  image: string;
+  image: string | number;
   rating?: number;
   reviewCount?: number;
   price?: number;
@@ -115,7 +115,7 @@ export interface Resort {
   id: string;
   name: string;
   location: string;
-  image: string;
+  image: string | number;
   rating: number;
   reviewCount: number;
   pricePerNight: number;

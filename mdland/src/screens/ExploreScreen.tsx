@@ -109,7 +109,7 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateVilla }) => {
               style={styles.villaCard}
               onPress={() => onNavigateVilla(item)}
             >
-              <Image source={{ uri: item.images[0] }} style={styles.villaImage} />
+              <Image source={item.images[0]} style={styles.villaImage} />
               <View style={styles.villaContent}>
                 <View style={[styles.categoryBadge, {
                   backgroundColor: item.category === 'suite' ? COLORS.accent + '15' :

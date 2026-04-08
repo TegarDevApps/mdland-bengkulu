@@ -48,7 +48,7 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
   const renderResult = ({ item, index }: any) => (
     <Animated.View entering={FadeInDown.delay(index * 50).springify()}>
       <Pressable style={styles.resultCard}>
-        <Image source={{ uri: item.image }} style={styles.resultImage} />
+        <Image source={item.image} style={styles.resultImage} />
         <View style={styles.resultContent}>
           <View style={[styles.typeBadge, {
             backgroundColor: item.type === 'villa' ? COLORS.primary + '15' :

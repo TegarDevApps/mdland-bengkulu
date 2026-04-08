@@ -65,7 +65,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
             style={{ width: SCREEN_WIDTH }}
           >
             <Image
-              source={{ uri: item }}
+              source={item}
               style={[styles.image, { height, borderRadius }]}
             />
           </Pressable>

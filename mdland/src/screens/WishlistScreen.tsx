@@ -23,7 +23,7 @@ const WishlistScreen: React.FC = () => {
   const renderItem = ({ item, index }: any) => (
     <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
       <Pressable style={styles.card}>
-        <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <Image source={item.images[0] as any} style={styles.cardImage} />
         <View style={styles.cardContent}>
           <Text style={styles.cardName} numberOfLines={1}>{item.name}</Text>
           <View style={styles.cardLocation}>
