@@ -27,7 +27,11 @@ const GENRE_ICONS: Record<string, string> = {
   Wellness: 'leaf-outline',
 };
 
-const EventsScreen: React.FC = () => {
+interface EventsScreenProps {
+  onNavigateEvent?: (event: any) => void;
+}
+
+const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent }) => {
   const insets = useSafeAreaInsets();
   const [activeGenre, setActiveGenre] = useState('Semua');
 
@@ -88,7 +92,7 @@ const EventsScreen: React.FC = () => {
         {filteredEvents.length > 0 && (
           <EventCard
             event={filteredEvents[0]}
-            onPress={() => {}}
+            onPress={() => onNavigateEvent?.(filteredEvents[0])}
             variant="full"
             index={0}
           />
@@ -99,7 +103,7 @@ const EventsScreen: React.FC = () => {
           <EventCard
             key={event.id}
             event={event}
-            onPress={() => {}}
+            onPress={() => onNavigateEvent?.(event)}
             variant="horizontal"
             index={index + 1}
           />

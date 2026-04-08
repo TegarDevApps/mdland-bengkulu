@@ -46,7 +46,7 @@ const TabIcon: React.FC<TabIconProps> = ({ name, focused, color, size }) => {
 interface BottomTabNavigatorProps {
   onNavigateVilla: (villa: any) => void;
   onNavigateSearch: () => void;
-  onNavigateEvents: () => void;
+  onNavigateEvent: (event: any) => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
 }
@@ -54,7 +54,7 @@ interface BottomTabNavigatorProps {
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   onNavigateVilla,
   onNavigateSearch,
-  onNavigateEvents,
+  onNavigateEvent,
   onNavigateFnB,
   onNavigateWahana,
 }) => {
@@ -81,7 +81,8 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           <HomeScreen
             onNavigateVilla={onNavigateVilla}
             onNavigateExplore={() => {}}
-            onNavigateEvents={onNavigateEvents}
+            onNavigateEvents={() => {}}
+            onNavigateEvent={onNavigateEvent}
             onNavigateSearch={onNavigateSearch}
             onNavigateFnB={onNavigateFnB}
             onNavigateWahana={onNavigateWahana}
@@ -102,13 +103,14 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
 
       <Tab.Screen
         name="Events"
-        component={EventsScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon name={focused ? 'musical-notes' : 'musical-notes-outline'} focused={focused} color={color} size={size} />
           ),
         }}
-      />
+      >
+        {() => <EventsScreen onNavigateEvent={onNavigateEvent} />}
+      </Tab.Screen>
 
       <Tab.Screen
         name="Wishlist"

@@ -31,6 +31,7 @@ interface HomeScreenProps {
   onNavigateVilla: (villa: Villa) => void;
   onNavigateExplore: () => void;
   onNavigateEvents: () => void;
+  onNavigateEvent?: (event: any) => void;
   onNavigateSearch: () => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
@@ -40,6 +41,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateVilla,
   onNavigateExplore,
   onNavigateEvents,
+  onNavigateEvent,
   onNavigateSearch,
   onNavigateFnB,
   onNavigateWahana,
@@ -247,7 +249,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
               <EventCard
                 key={event.id}
                 event={event}
-                onPress={() => {}}
+                onPress={() => onNavigateEvent?.(event)}
                 variant="horizontal"
                 index={index}
               />

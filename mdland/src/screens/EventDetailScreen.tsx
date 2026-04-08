@@ -12,40 +12,44 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../constants/theme';
-import { Wahana } from '../types';
-import { WAHANA } from '../data/mockData';
+import { Event } from '../types';
+import { EVENTS } from '../data/mockData';
 
 const IMAGE_HEIGHT = 360;
 const HEADER_HEIGHT = 56;
 const TABS: { label: string; icon: string }[] = [
   { label: 'Overview', icon: 'compass-outline' },
-  { label: 'Info', icon: 'list-outline' },
+  { label: 'Details', icon: 'list-outline' },
   { label: 'Tiket', icon: 'ticket-outline' },
   { label: 'Gallery', icon: 'images-outline' },
   { label: 'Review', icon: 'chatbubble-ellipses-outline' },
 ];
 const MOCK_REVIEWS = [
-  { id: '1', name: 'Reza Pratama', avatar: 'https://i.pravatar.cc/100?img=14', rating: 5, date: '1 minggu lalu', text: 'Wahana seru banget! Anak-anak sangat menikmati. Staff ramah dan sigap.' },
-  { id: '2', name: 'Fitri Amalia', avatar: 'https://i.pravatar.cc/100?img=23', rating: 4, date: '2 minggu lalu', text: 'Pengalaman menyenangkan, wahana terjaga keamanannya. Antrian agak panjang di weekend.' },
-  { id: '3', name: 'Dimas Aryo', avatar: 'https://i.pravatar.cc/100?img=33', rating: 5, date: '1 bulan lalu', text: 'Worth it banget! Pemandangan dari wahana ini luar biasa. Harga sesuai pengalaman.' },
+  { id: '1', name: 'Yoga Aditya', avatar: 'https://i.pravatar.cc/100?img=15', rating: 5, date: '3 hari lalu', text: 'Event keren banget! Musiknya enak, suasananya seru. Venue-nya juga cantik langsung di tepi pantai.' },
+  { id: '2', name: 'Rina Kartika', avatar: 'https://i.pravatar.cc/100?img=25', rating: 4, date: '1 minggu lalu', text: 'Acara sangat terorganisir. Sound system luar biasa. Minuman agak overpriced tapi overall worth it.' },
+  { id: '3', name: 'Fajar Nugroho', avatar: 'https://i.pravatar.cc/100?img=53', rating: 5, date: '2 minggu lalu', text: 'Best event di Bengkulu! DJ-nya keren, crowd-nya friendly. Pasti datang lagi event berikutnya.' },
 ];
 
-interface WahanaDetailScreenProps {
-  wahana: Wahana;
+interface EventDetailScreenProps {
+  event: Event;
   onBack: () => void;
-  onBuyTicket: (wahana: Wahana, qty: number, total: number) => void;
+  onBuyTicket: (event: Event, qty: number, total: number) => void;
 }
 
-const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack, onBuyTicket }) => {
+const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, onBuyTicket }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const [activeTab, setActiveTab] = useState(0);
   const [liked, setLiked] = useState(false);
   const [ticketQty, setTicketQty] = useState(1);
-  const total = wahana.price * ticketQty;
+  const total = event.price * ticketQty;
 
   const scrollHandler = useAnimatedScrollHandler({ onScroll: e => { scrollY.value = e.contentOffset.y; } });
   const formatPrice = (p: number) => 'Rp ' + p.toLocaleString('id-ID');
+  const formatDate = (d: string) => {
+    const date = new Date(d);
+    return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  };
 
   const headerBg = useAnimatedStyle(() => {
     const o = interpolate(scrollY.value, [IMAGE_HEIGHT - 140, IMAGE_HEIGHT - 60], [0, 1], Extrapolation.CLAMP);
@@ -56,7 +60,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
     return { opacity: o };
   });
 
-  const similarWahana = WAHANA.filter(w => w.category === wahana.category && w.id !== wahana.id).slice(0, 6);
+  const similarEvents = EVENTS.filter(e => e.genre === event.genre && e.id !== event.id).slice(0, 6);
 
   return (
     <View style={styles.container}>
@@ -67,7 +71,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
         <Pressable onPress={onBack} style={styles.headerBtn}>
           <Ionicons name="chevron-back" size={22} color={COLORS.gray800} />
         </Pressable>
-        <Animated.Text style={[styles.headerTitle, headerTitleStyle]} numberOfLines={1}>{wahana.name}</Animated.Text>
+        <Animated.Text style={[styles.headerTitle, headerTitleStyle]} numberOfLines={1}>{event.title}</Animated.Text>
         <View style={styles.headerRight}>
           <Pressable onPress={() => setLiked(!liked)} style={styles.headerBtn}>
             <Ionicons name={liked ? 'heart' : 'heart-outline'} size={20} color={liked ? COLORS.coral : COLORS.gray800} />
@@ -85,25 +89,31 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
         contentContainerStyle={{ paddingBottom: 130 }}
       >
         {/* Hero Image */}
-        <Image source={{ uri: wahana.image }} style={styles.heroImage} />
+        <Image source={{ uri: event.image }} style={styles.heroImage} />
 
         {/* Content Card */}
         <View style={styles.contentCard}>
-          {/* Badge + Rating */}
+          {/* Genre Badge + Attending */}
           <View style={styles.badgeRow}>
-            <View style={styles.catBadge}>
-              <Text style={styles.catBadgeText}>{wahana.category.toUpperCase()}</Text>
+            <View style={styles.genreBadge}>
+              <Text style={styles.genreBadgeText}>{event.genre.toUpperCase()}</Text>
             </View>
-            <View style={styles.ratingChip}>
-              <Ionicons name="star" size={14} color={COLORS.accent} />
-              <Text style={styles.ratingText}>{wahana.rating}</Text>
+            <View style={styles.attendingChip}>
+              <Ionicons name="people-outline" size={14} color={COLORS.teal} />
+              <Text style={styles.attendingText}>{event.attending} hadir</Text>
             </View>
           </View>
 
-          <Text style={styles.wahanaName}>{wahana.name}</Text>
+          <Text style={styles.eventTitle}>{event.title}</Text>
+          {event.artist && (
+            <View style={styles.artistRow}>
+              <Ionicons name="mic-outline" size={15} color={COLORS.primary} />
+              <Text style={styles.artistText}>{event.artist}</Text>
+            </View>
+          )}
           <View style={styles.locationRow}>
             <Ionicons name="location-outline" size={15} color={COLORS.gray500} />
-            <Text style={styles.locationText}>MDLAND Bengkulu</Text>
+            <Text style={styles.locationText}>{event.location}</Text>
           </View>
 
           {/* Tab Selector */}
@@ -116,55 +126,54 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             ))}
           </ScrollView>
 
-          {/* Tab Content */}
+          {/* Overview Tab */}
           {activeTab === 0 && (
             <Animated.View entering={FadeIn.duration(250)}>
-              <Text style={styles.sectionTitle}>Deskripsi</Text>
-              <Text style={styles.descriptionText}>{wahana.description}</Text>
+              <Text style={styles.sectionTitle}>Tentang Event</Text>
+              <Text style={styles.descriptionText}>{event.description}</Text>
 
               <View style={styles.quickInfoBar}>
                 <View style={styles.qiItem}>
                   <View style={[styles.qiIcon, { backgroundColor: COLORS.teal + '12' }]}>
-                    <Ionicons name="time-outline" size={18} color={COLORS.teal} />
+                    <Ionicons name="calendar-outline" size={18} color={COLORS.teal} />
                   </View>
-                  <Text style={styles.qiValue}>{wahana.duration}</Text>
-                  <Text style={styles.qiLabel}>Durasi</Text>
+                  <Text style={styles.qiValue}>{new Date(event.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</Text>
+                  <Text style={styles.qiLabel}>Tanggal</Text>
                 </View>
                 <View style={styles.qiDivider} />
                 <View style={styles.qiItem}>
                   <View style={[styles.qiIcon, { backgroundColor: COLORS.primary + '12' }]}>
-                    <Ionicons name="people-outline" size={18} color={COLORS.primary} />
+                    <Ionicons name="time-outline" size={18} color={COLORS.primary} />
                   </View>
-                  <Text style={styles.qiValue}>{wahana.capacity}</Text>
-                  <Text style={styles.qiLabel}>Kapasitas</Text>
+                  <Text style={styles.qiValue}>{event.time.split(' - ')[0]}</Text>
+                  <Text style={styles.qiLabel}>Mulai</Text>
                 </View>
                 <View style={styles.qiDivider} />
                 <View style={styles.qiItem}>
                   <View style={[styles.qiIcon, { backgroundColor: COLORS.accent + '12' }]}>
                     <Ionicons name="cash-outline" size={18} color={COLORS.accent} />
                   </View>
-                  <Text style={styles.qiValue}>{formatPrice(wahana.price)}</Text>
-                  <Text style={styles.qiLabel}>Per Orang</Text>
+                  <Text style={styles.qiValue}>{formatPrice(event.price)}</Text>
+                  <Text style={styles.qiLabel}>Per Tiket</Text>
                 </View>
               </View>
 
-              {/* Similar Wahana inside Overview */}
-              {similarWahana.length > 0 && (
+              {/* Similar Events */}
+              {similarEvents.length > 0 && (
                 <View style={styles.similarSection}>
-                  <Text style={styles.sectionTitle}>Wahana Serupa</Text>
+                  <Text style={styles.sectionTitle}>Event Serupa</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.similarList}>
-                    {similarWahana.map((sw, index) => (
-                      <Animated.View key={sw.id} entering={FadeInDown.delay(index * 60).springify()}>
+                    {similarEvents.map((se, index) => (
+                      <Animated.View key={se.id} entering={FadeInDown.delay(index * 60).springify()}>
                         <View style={styles.similarCard}>
-                          <Image source={{ uri: sw.image }} style={styles.similarImage} />
+                          <Image source={{ uri: se.image }} style={styles.similarImage} />
                           <View style={styles.similarInfo}>
-                            <Text style={styles.similarName} numberOfLines={1}>{sw.name}</Text>
+                            <Text style={styles.similarName} numberOfLines={1}>{se.title}</Text>
                             <View style={styles.similarMeta}>
-                              <Ionicons name="star" size={12} color={COLORS.accent} />
-                              <Text style={styles.similarRating}>{sw.rating}</Text>
-                              <Text style={styles.similarDuration}> · {sw.duration}</Text>
+                              <Ionicons name="calendar-outline" size={12} color={COLORS.gray500} />
+                              <Text style={styles.similarDate}>{new Date(se.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</Text>
                             </View>
-                            <Text style={styles.similarPrice}>{formatPrice(sw.price)}</Text>
+                            <Text style={styles.similarPrice}>{formatPrice(se.price)}</Text>
                           </View>
                         </View>
                       </Animated.View>
@@ -175,44 +184,55 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             </Animated.View>
           )}
 
+          {/* Details Tab */}
           {activeTab === 1 && (
             <Animated.View entering={FadeIn.duration(250)}>
-              <Text style={styles.sectionTitle}>Detail Wahana</Text>
+              <Text style={styles.sectionTitle}>Informasi Event</Text>
               <View style={styles.detailCard}>
                 <View style={styles.detailRow}>
-                  <Ionicons name="time-outline" size={18} color={COLORS.teal} />
-                  <Text style={styles.detailLabel}>Durasi</Text>
-                  <Text style={styles.detailValue}>{wahana.duration}</Text>
+                  <Ionicons name="calendar-outline" size={18} color={COLORS.teal} />
+                  <Text style={styles.detailLabel}>Tanggal</Text>
+                  <Text style={styles.detailValue}>{formatDate(event.date)}</Text>
                 </View>
                 <View style={styles.detailDivider} />
                 <View style={styles.detailRow}>
-                  <Ionicons name="people-outline" size={18} color={COLORS.primary} />
-                  <Text style={styles.detailLabel}>Kapasitas</Text>
-                  <Text style={styles.detailValue}>Max {wahana.capacity} orang</Text>
+                  <Ionicons name="time-outline" size={18} color={COLORS.primary} />
+                  <Text style={styles.detailLabel}>Waktu</Text>
+                  <Text style={styles.detailValue}>{event.time} WIB</Text>
                 </View>
                 <View style={styles.detailDivider} />
-                {wahana.minAge != null && (
+                <View style={styles.detailRow}>
+                  <Ionicons name="location-outline" size={18} color={COLORS.accent} />
+                  <Text style={styles.detailLabel}>Lokasi</Text>
+                  <Text style={styles.detailValue}>{event.location}</Text>
+                </View>
+                <View style={styles.detailDivider} />
+                <View style={styles.detailRow}>
+                  <Ionicons name="musical-notes-outline" size={18} color={COLORS.coral} />
+                  <Text style={styles.detailLabel}>Genre</Text>
+                  <Text style={styles.detailValue}>{event.genre}</Text>
+                </View>
+                {event.artist && (
                   <>
-                    <View style={styles.detailRow}>
-                      <Ionicons name="person-outline" size={18} color={COLORS.accent} />
-                      <Text style={styles.detailLabel}>Usia Minimum</Text>
-                      <Text style={styles.detailValue}>{wahana.minAge} tahun</Text>
-                    </View>
                     <View style={styles.detailDivider} />
+                    <View style={styles.detailRow}>
+                      <Ionicons name="mic-outline" size={18} color={COLORS.palm} />
+                      <Text style={styles.detailLabel}>Artis</Text>
+                      <Text style={styles.detailValue}>{event.artist}</Text>
+                    </View>
                   </>
                 )}
+                <View style={styles.detailDivider} />
                 <View style={styles.detailRow}>
-                  <Ionicons name="checkmark-circle-outline" size={18} color={COLORS.success} />
-                  <Text style={styles.detailLabel}>Status</Text>
-                  <Text style={[styles.detailValue, { color: wahana.available ? COLORS.success : COLORS.error }]}>
-                    {wahana.available ? 'Tersedia' : 'Tutup'}
-                  </Text>
+                  <Ionicons name="people-outline" size={18} color={COLORS.success} />
+                  <Text style={styles.detailLabel}>Peserta</Text>
+                  <Text style={styles.detailValue}>{event.attending} terdaftar</Text>
                 </View>
               </View>
 
               <Text style={[styles.sectionTitle, { marginTop: SPACING.xxl }]}>Yang Termasuk</Text>
               <View style={styles.includesGrid}>
-                {['Peralatan lengkap', 'Instruktur', 'Asuransi', 'Loker'].map(item => (
+                {['Akses venue', 'Welcome drink', 'Sound system premium', 'Area parkir'].map(item => (
                   <View key={item} style={styles.includeChip}>
                     <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
                     <Text style={styles.includeText}>{item}</Text>
@@ -222,6 +242,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             </Animated.View>
           )}
 
+          {/* Tiket Tab */}
           {activeTab === 2 && (
             <Animated.View entering={FadeIn.duration(250)}>
               <Text style={styles.sectionTitle}>Jumlah Tiket</Text>
@@ -230,14 +251,14 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
                   <Ionicons name="remove" size={20} color={COLORS.primary} />
                 </Pressable>
                 <Text style={styles.ticketQty}>{ticketQty}</Text>
-                <Pressable onPress={() => setTicketQty(Math.min(wahana.capacity, ticketQty + 1))} style={styles.ticketBtn}>
+                <Pressable onPress={() => setTicketQty(Math.min(10, ticketQty + 1))} style={styles.ticketBtn}>
                   <Ionicons name="add" size={20} color={COLORS.primary} />
                 </Pressable>
               </View>
 
               <View style={styles.costCard}>
                 <View style={styles.costRow}>
-                  <Text style={styles.costLabel}>{ticketQty}x Tiket @ {formatPrice(wahana.price)}</Text>
+                  <Text style={styles.costLabel}>{ticketQty}x Tiket @ {formatPrice(event.price)}</Text>
                   <Text style={styles.costValue}>{formatPrice(total)}</Text>
                 </View>
                 <View style={styles.costRow}>
@@ -250,18 +271,23 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
                   <Text style={styles.costTotalValue}>{formatPrice(Math.round(total * 1.05))}</Text>
                 </View>
               </View>
+
+              <View style={styles.noteRow}>
+                <Ionicons name="information-circle-outline" size={16} color={COLORS.gray500} />
+                <Text style={styles.noteText}>Tiket tidak dapat dikembalikan setelah pembelian</Text>
+              </View>
             </Animated.View>
           )}
 
           {/* Gallery Tab */}
           {activeTab === 3 && (
             <Animated.View entering={FadeIn.duration(250)}>
-              <Text style={styles.sectionTitle}>Foto Wahana</Text>
+              <Text style={styles.sectionTitle}>Foto Event</Text>
               <View style={styles.galleryGrid}>
                 <Animated.View entering={FadeInDown.delay(0).springify()}>
-                  <Image source={{ uri: wahana.image }} style={styles.galleryHero} />
+                  <Image source={{ uri: event.image }} style={styles.galleryHero} />
                 </Animated.View>
-                {[wahana.image, wahana.image].map((img, i) => (
+                {[event.image, event.image].map((img, i) => (
                   <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
                     <Image source={{ uri: img }} style={styles.galleryThumb} />
                   </Animated.View>
@@ -277,7 +303,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
                 <Text style={styles.sectionTitle}>Ulasan Pengunjung</Text>
                 <View style={styles.reviewSummary}>
                   <Ionicons name="star" size={18} color={COLORS.accent} />
-                  <Text style={styles.reviewAvg}>{wahana.rating}</Text>
+                  <Text style={styles.reviewAvg}>4.7</Text>
                   <Text style={styles.reviewTotal}>· {MOCK_REVIEWS.length} ulasan</Text>
                 </View>
               </View>
@@ -306,21 +332,20 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
       {/* Bottom CTA */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 12 }]}>
         <View>
-          <Text style={styles.bottomLabel}>Total</Text>
-          <Text style={styles.bottomTotal}>{formatPrice(Math.round(total * 1.05))}</Text>
+          <Text style={styles.bottomLabel}>Mulai dari</Text>
+          <Text style={styles.bottomTotal}>{formatPrice(event.price)}</Text>
         </View>
         <Pressable
-          onPress={() => onBuyTicket(wahana, ticketQty, Math.round(total * 1.05))}
-          style={[styles.buyButton, !wahana.available && { opacity: 0.5 }]}
-          disabled={!wahana.available}
+          onPress={() => onBuyTicket(event, ticketQty, Math.round(total * 1.05))}
+          style={styles.buyButton}
         >
           <LinearGradient
-            colors={wahana.available ? COLORS.gradientOcean as any : [COLORS.gray300, COLORS.gray400]}
+            colors={COLORS.gradientOcean as any}
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
             style={styles.buyGradient}
           >
             <Ionicons name="ticket-outline" size={18} color={COLORS.white} />
-            <Text style={styles.buyText}>{wahana.available ? 'Beli Tiket' : 'Tidak Tersedia'}</Text>
+            <Text style={styles.buyText}>Beli Tiket</Text>
           </LinearGradient>
         </Pressable>
       </View>
@@ -353,11 +378,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white, paddingHorizontal: SPACING.xl, paddingTop: SPACING.xxl,
   },
   badgeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
-  catBadge: { backgroundColor: COLORS.teal + '12', paddingHorizontal: 12, paddingVertical: 5, borderRadius: RADIUS.round },
-  catBadgeText: { fontSize: 10, fontWeight: '700', color: COLORS.teal, letterSpacing: 0.8 },
-  ratingChip: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  ratingText: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray800, fontSize: 14 },
-  wahanaName: { ...TYPOGRAPHY.h2, color: COLORS.gray800, fontSize: 24, marginBottom: 6 },
+  genreBadge: { backgroundColor: COLORS.coral + '15', paddingHorizontal: 12, paddingVertical: 5, borderRadius: RADIUS.round },
+  genreBadgeText: { fontSize: 10, fontWeight: '700', color: COLORS.coral, letterSpacing: 0.8 },
+  attendingChip: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  attendingText: { ...TYPOGRAPHY.bodySm, color: COLORS.teal, fontWeight: '600', fontSize: 12 },
+  eventTitle: { ...TYPOGRAPHY.h2, color: COLORS.gray800, fontSize: 24, marginBottom: 6 },
+  artistRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
+  artistText: { ...TYPOGRAPHY.bodyMedium, color: COLORS.primary, fontSize: 14 },
   locationRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: SPACING.lg },
   locationText: { ...TYPOGRAPHY.bodySm, color: COLORS.gray500 },
 
@@ -388,7 +415,7 @@ const styles = StyleSheet.create({
   detailCard: { backgroundColor: COLORS.offWhite, borderRadius: RADIUS.xl, padding: SPACING.xl },
   detailRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   detailLabel: { ...TYPOGRAPHY.body, color: COLORS.gray500, flex: 1, fontSize: 14 },
-  detailValue: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray800, fontSize: 14 },
+  detailValue: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray800, fontSize: 14, flex: 1, textAlign: 'right' },
   detailDivider: { height: 1, backgroundColor: COLORS.gray200, marginVertical: 12 },
   includesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   includeChip: {
@@ -417,18 +444,8 @@ const styles = StyleSheet.create({
   costDivider: { height: 1, backgroundColor: COLORS.gray200, marginVertical: 8 },
   costTotalLabel: { ...TYPOGRAPHY.bodyMedium, color: COLORS.gray800, fontSize: 14 },
   costTotalValue: { ...TYPOGRAPHY.h4, color: COLORS.primary, fontSize: 16 },
-
-  // Similar
-  similarSection: { marginTop: SPACING.xxxl },
-  similarList: { gap: 12, paddingBottom: SPACING.md },
-  similarCard: { width: 160, backgroundColor: COLORS.offWhite, borderRadius: RADIUS.xl, overflow: 'hidden' },
-  similarImage: { width: 160, height: 110 },
-  similarInfo: { padding: SPACING.sm },
-  similarName: { ...TYPOGRAPHY.bodySm, color: COLORS.gray800, fontWeight: '600', marginBottom: 4 },
-  similarMeta: { flexDirection: 'row', alignItems: 'center', gap: 3, marginBottom: 4 },
-  similarRating: { ...TYPOGRAPHY.caption, color: COLORS.gray700, fontWeight: '700', fontSize: 11 },
-  similarDuration: { ...TYPOGRAPHY.caption, color: COLORS.gray500, fontSize: 10 },
-  similarPrice: { ...TYPOGRAPHY.bodyMedium, color: COLORS.primary, fontSize: 13 },
+  noteRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: SPACING.md },
+  noteText: { ...TYPOGRAPHY.caption, color: COLORS.gray500, flex: 1 },
 
   // Gallery
   galleryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
@@ -448,6 +465,17 @@ const styles = StyleSheet.create({
   reviewStars: { flexDirection: 'row', gap: 2 },
   reviewText: { ...TYPOGRAPHY.bodySm, color: COLORS.gray600, lineHeight: 20 },
 
+  // Similar
+  similarSection: { marginTop: SPACING.xxxl },
+  similarList: { gap: 12, paddingBottom: SPACING.md },
+  similarCard: { width: 160, backgroundColor: COLORS.offWhite, borderRadius: RADIUS.xl, overflow: 'hidden' },
+  similarImage: { width: 160, height: 110 },
+  similarInfo: { padding: SPACING.sm },
+  similarName: { ...TYPOGRAPHY.bodySm, color: COLORS.gray800, fontWeight: '600', marginBottom: 4 },
+  similarMeta: { flexDirection: 'row', alignItems: 'center', gap: 3, marginBottom: 4 },
+  similarDate: { ...TYPOGRAPHY.caption, color: COLORS.gray500, fontSize: 10 },
+  similarPrice: { ...TYPOGRAPHY.bodyMedium, color: COLORS.primary, fontSize: 13 },
+
   // Bottom
   bottomBar: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -462,4 +490,4 @@ const styles = StyleSheet.create({
   buyText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },
 });
 
-export default WahanaDetailScreen;
+export default EventDetailScreen;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Villa, Restaurant, Wahana, DiningItem } from '../types';
+import { Villa, Restaurant, Wahana, DiningItem, Event } from '../types';
 
 // Screens
 import SplashScreen from '../screens/SplashScreen';
@@ -20,6 +20,7 @@ import FnBOrderScreen from '../screens/FnBOrderScreen';
 import FnBCartScreen from '../screens/FnBCartScreen';
 import WahanaListScreen from '../screens/WahanaListScreen';
 import WahanaDetailScreen from '../screens/WahanaDetailScreen';
+import EventDetailScreen from '../screens/EventDetailScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -79,7 +80,9 @@ const AppNavigator: React.FC = () => {
                 props.navigation.navigate('VillaDetail', { villa })
               }
               onNavigateSearch={() => props.navigation.navigate('Search')}
-              onNavigateEvents={() => {}}
+              onNavigateEvent={(event: Event) =>
+                props.navigation.navigate('EventDetail', { event })
+              }
               onNavigateFnB={() => props.navigation.navigate('FnB')}
               onNavigateWahana={() => props.navigation.navigate('WahanaList')}
             />
@@ -209,6 +212,23 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="Search" options={{ animation: 'fade' }}>
           {(props: any) => (
             <SearchScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        {/* Event Detail */}
+        <Stack.Screen name="EventDetail" options={{ animation: 'fade_from_bottom' }}>
+          {(props: any) => (
+            <EventDetailScreen
+              event={props.route.params.event}
+              onBack={() => props.navigation.goBack()}
+              onBuyTicket={(_event: Event, _qty: number, total: number) =>
+                props.navigation.navigate('Payment', {
+                  totalPrice: total,
+                  type: 'event',
+                  itemName: _event.title,
+                })
+              }
+            />
           )}
         </Stack.Screen>
       </Stack.Navigator>
