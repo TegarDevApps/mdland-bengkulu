@@ -36,6 +36,7 @@ interface HomeScreenProps {
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
   onNavigateMap?: () => void;
+  onNavigateNotifications?: () => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -47,6 +48,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateFnB,
   onNavigateWahana,
   onNavigateMap,
+  onNavigateNotifications,
 }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
@@ -100,7 +102,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
           <Pressable onPress={onNavigateSearch} style={styles.headerIcon}>
             <Ionicons name="search" size={22} color={COLORS.gray700} />
           </Pressable>
-          <Pressable style={styles.headerIcon}>
+          <Pressable onPress={onNavigateNotifications} style={styles.headerIcon}>
             <Ionicons name="notifications-outline" size={22} color={COLORS.gray700} />
             <View style={styles.notifDot} />
           </Pressable>

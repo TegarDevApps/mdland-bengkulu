@@ -55,6 +55,9 @@ interface BottomTabNavigatorProps {
   onNavigateRestaurant?: (restaurant: any) => void;
   onNavigateWahanaDetail?: (wahana: any) => void;
   onNavigateEvents: () => void;
+  onNavigatePersonalInfo?: () => void;
+  onNavigatePaymentHistory?: () => void;
+  onNavigateNotifications?: () => void;
 }
 
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
@@ -67,6 +70,9 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   onNavigateRestaurant,
   onNavigateWahanaDetail,
   onNavigateEvents,
+  onNavigatePersonalInfo,
+  onNavigatePaymentHistory,
+  onNavigateNotifications,
 }) => {
   return (
     <Tab.Navigator
@@ -97,6 +103,7 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
             onNavigateFnB={onNavigateFnB}
             onNavigateWahana={onNavigateWahana}
             onNavigateMap={onNavigateMap}
+            onNavigateNotifications={onNavigateNotifications}
           />
         )}
       </Tab.Screen>
@@ -138,13 +145,20 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
 
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon name={focused ? 'person' : 'person-outline'} focused={focused} color={color} size={size} />
           ),
         }}
-      />
+      >
+        {() => (
+          <ProfileScreen
+            onNavigatePersonalInfo={onNavigatePersonalInfo}
+            onNavigatePaymentHistory={onNavigatePaymentHistory}
+            onNavigateNotifications={onNavigateNotifications}
+          />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };

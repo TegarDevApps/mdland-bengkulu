@@ -22,6 +22,9 @@ import WahanaListScreen from '../screens/WahanaListScreen';
 import WahanaDetailScreen from '../screens/WahanaDetailScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
 import EventsScreen from '../screens/EventsScreen';
+import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import PaymentHistoryScreen from '../screens/PaymentHistoryScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -94,6 +97,9 @@ const AppNavigator: React.FC = () => {
               onNavigateWahanaDetail={(wahana: Wahana) =>
                 props.navigation.navigate('WahanaDetail', { wahana })
               }
+              onNavigatePersonalInfo={() => props.navigation.navigate('PersonalInfo')}
+              onNavigatePaymentHistory={() => props.navigation.navigate('PaymentHistory')}
+              onNavigateNotifications={() => props.navigation.navigate('Notifications')}
             />
           )}
         </Stack.Screen>
@@ -261,6 +267,25 @@ const AppNavigator: React.FC = () => {
                 })
               }
             />
+          )}
+        </Stack.Screen>
+
+        {/* Profile Sub-Screens */}
+        <Stack.Screen name="PersonalInfo" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PersonalInfoScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="PaymentHistory" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PaymentHistoryScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Notifications" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <NotificationsScreen onBack={() => props.navigation.goBack()} />
           )}
         </Stack.Screen>
       </Stack.Navigator>

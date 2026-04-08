@@ -22,16 +22,26 @@ const TIER_COLORS = {
 };
 
 const MENU_ITEMS = [
-  { icon: 'person-outline', title: 'Personal Info', subtitle: 'Name, email, phone' },
-  { icon: 'card-outline', title: 'Payment Methods', subtitle: 'Cards and wallets' },
-  { icon: 'notifications-outline', title: 'Notifications', subtitle: 'Alerts and preferences' },
-  { icon: 'shield-outline', title: 'Privacy & Security', subtitle: 'Password, 2FA' },
-  { icon: 'language-outline', title: 'Language & Region', subtitle: 'English, USD' },
-  { icon: 'help-circle-outline', title: 'Help & Support', subtitle: 'FAQs, contact us' },
-  { icon: 'document-text-outline', title: 'Terms & Policies', subtitle: 'Legal information' },
+  { icon: 'person-outline', title: 'Personal Info', subtitle: 'Name, email, phone', key: 'personalInfo' },
+  { icon: 'receipt-outline', title: 'Riwayat Pembayaran', subtitle: 'History transaksi', key: 'paymentHistory' },
+  { icon: 'notifications-outline', title: 'Notifications', subtitle: 'Alerts and preferences', key: 'notifications' },
+  { icon: 'shield-outline', title: 'Privacy & Security', subtitle: 'Password, 2FA', key: 'privacy' },
+  { icon: 'language-outline', title: 'Language & Region', subtitle: 'English, USD', key: 'language' },
+  { icon: 'help-circle-outline', title: 'Help & Support', subtitle: 'FAQs, contact us', key: 'help' },
+  { icon: 'document-text-outline', title: 'Terms & Policies', subtitle: 'Legal information', key: 'terms' },
 ];
 
-const ProfileScreen: React.FC = () => {
+interface ProfileScreenProps {
+  onNavigatePersonalInfo?: () => void;
+  onNavigatePaymentHistory?: () => void;
+  onNavigateNotifications?: () => void;
+}
+
+const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  onNavigatePersonalInfo,
+  onNavigatePaymentHistory,
+  onNavigateNotifications,
+}) => {
   const insets = useSafeAreaInsets();
   const tierColor = TIER_COLORS[USER.tier];
 
@@ -101,7 +111,14 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.menu}>
           {MENU_ITEMS.map((item, index) => (
             <Animated.View key={item.title} entering={FadeInDown.delay(300 + index * 50)}>
-              <Pressable style={styles.menuItem}>
+              <Pressable
+                style={styles.menuItem}
+                onPress={() => {
+                  if (item.key === 'personalInfo') onNavigatePersonalInfo?.();
+                  else if (item.key === 'paymentHistory') onNavigatePaymentHistory?.();
+                  else if (item.key === 'notifications') onNavigateNotifications?.();
+                }}
+              >
                 <View style={styles.menuIcon}>
                   <Ionicons name={item.icon as any} size={20} color={COLORS.gray600} />
                 </View>

@@ -147,4 +147,7 @@ export type RootStackParamList = {
   Profile: undefined;
   MyBookings: undefined;
   Search: undefined;
+  PersonalInfo: undefined;
+  PaymentHistory: undefined;
+  Notifications: undefined;
 };
