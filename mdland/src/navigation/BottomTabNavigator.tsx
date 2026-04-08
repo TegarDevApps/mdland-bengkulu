@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,6 +15,7 @@ import ExploreScreen from '../screens/ExploreScreen';
 import EventsScreen from '../screens/EventsScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import MapViewScreen from '../screens/MapViewScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +51,10 @@ interface BottomTabNavigatorProps {
   onNavigateEvent: (event: any) => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
+  onNavigateMap: () => void;
+  onNavigateRestaurant?: (restaurant: any) => void;
+  onNavigateWahanaDetail?: (wahana: any) => void;
+  onNavigateEvents: () => void;
 }
 
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
@@ -57,6 +63,10 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   onNavigateEvent,
   onNavigateFnB,
   onNavigateWahana,
+  onNavigateMap,
+  onNavigateRestaurant,
+  onNavigateWahanaDetail,
+  onNavigateEvents,
 }) => {
   return (
     <Tab.Navigator
@@ -81,41 +91,45 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           <HomeScreen
             onNavigateVilla={onNavigateVilla}
             onNavigateExplore={() => {}}
-            onNavigateEvents={() => {}}
+            onNavigateEvents={onNavigateEvents}
             onNavigateEvent={onNavigateEvent}
             onNavigateSearch={onNavigateSearch}
             onNavigateFnB={onNavigateFnB}
             onNavigateWahana={onNavigateWahana}
+            onNavigateMap={onNavigateMap}
           />
         )}
       </Tab.Screen>
 
       <Tab.Screen
-        name="Explore"
+        name="Map"
         options={{
+          tabBarStyle: { display: 'none' },
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon name={focused ? 'compass' : 'compass-outline'} focused={focused} color={color} size={size} />
+            <TabIcon name={focused ? 'map' : 'map-outline'} focused={focused} color={color} size={size} />
           ),
         }}
       >
-        {() => <ExploreScreen onNavigateVilla={onNavigateVilla} />}
-      </Tab.Screen>
-
-      <Tab.Screen
-        name="Events"
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon name={focused ? 'musical-notes' : 'musical-notes-outline'} focused={focused} color={color} size={size} />
-          ),
+        {() => {
+          const navigation = useNavigation<any>();
+          return (
+            <MapViewScreen
+              onBack={() => navigation.navigate('Home')}
+              onSearch={onNavigateSearch}
+              onNavigateVilla={onNavigateVilla}
+              onNavigateRestaurant={onNavigateRestaurant}
+              onNavigateWahana={onNavigateWahanaDetail}
+              onNavigateEvent={onNavigateEvent}
+            />
+          );
         }}
-      >
-        {() => <EventsScreen onNavigateEvent={onNavigateEvent} />}
       </Tab.Screen>
 
       <Tab.Screen
-        name="Wishlist"
+        name="Favorites"
         component={WishlistScreen}
         options={{
+          tabBarLabel: 'Favorites',
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon name={focused ? 'heart' : 'heart-outline'} focused={focused} color={color} size={size} />
           ),

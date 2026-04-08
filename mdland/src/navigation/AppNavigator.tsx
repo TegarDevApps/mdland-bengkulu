@@ -21,6 +21,7 @@ import FnBCartScreen from '../screens/FnBCartScreen';
 import WahanaListScreen from '../screens/WahanaListScreen';
 import WahanaDetailScreen from '../screens/WahanaDetailScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import EventsScreen from '../screens/EventsScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -85,6 +86,14 @@ const AppNavigator: React.FC = () => {
               }
               onNavigateFnB={() => props.navigation.navigate('FnB')}
               onNavigateWahana={() => props.navigation.navigate('WahanaList')}
+              onNavigateMap={() => props.navigation.navigate('MapView')}
+              onNavigateEvents={() => props.navigation.navigate('Events')}
+              onNavigateRestaurant={(restaurant: Restaurant) =>
+                props.navigation.navigate('FnBOrder', { restaurant })
+              }
+              onNavigateWahanaDetail={(wahana: Wahana) =>
+                props.navigation.navigate('WahanaDetail', { wahana })
+              }
             />
           )}
         </Stack.Screen>
@@ -143,8 +152,31 @@ const AppNavigator: React.FC = () => {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="MapView" component={MapViewScreen} />
+        <Stack.Screen name="MapView" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <MapViewScreen
+              onBack={() => props.navigation.goBack()}
+              onSearch={() => props.navigation.navigate('Search')}
+              onNavigateVilla={(villa: Villa) => props.navigation.navigate('VillaDetail', { villa })}
+              onNavigateRestaurant={(restaurant: Restaurant) => props.navigation.navigate('FnBOrder', { restaurant })}
+              onNavigateWahana={(wahana: Wahana) => props.navigation.navigate('WahanaDetail', { wahana })}
+              onNavigateEvent={(event: Event) => props.navigation.navigate('EventDetail', { event })}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="MyBookings" component={MyBookingsScreen} />
+
+        {/* Events Flow */}
+        <Stack.Screen name="Events" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <EventsScreen
+              onBack={() => props.navigation.goBack()}
+              onNavigateEvent={(event: Event) =>
+                props.navigation.navigate('EventDetail', { event })
+              }
+            />
+          )}
+        </Stack.Screen>
 
         {/* F&B Flow */}
         <Stack.Screen name="FnB" options={{ animation: 'slide_from_right' }}>

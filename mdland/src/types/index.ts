@@ -101,8 +101,14 @@ export interface MapMarker {
   title: string;
   description: string;
   coordinate: { latitude: number; longitude: number };
-  type: 'villa' | 'restaurant' | 'event' | 'wahana';
+  type: 'villa' | 'restaurant' | 'event' | 'wahana' | 'facility';
   image: string;
+  rating?: number;
+  reviewCount?: number;
+  price?: number;
+  category?: string;
+  waitTime?: number;
+  isOpen?: boolean;
 }
 
 export interface Resort {

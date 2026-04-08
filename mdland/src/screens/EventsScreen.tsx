@@ -29,9 +29,10 @@ const GENRE_ICONS: Record<string, string> = {
 
 interface EventsScreenProps {
   onNavigateEvent?: (event: any) => void;
+  onBack?: () => void;
 }
 
-const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent }) => {
+const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent, onBack }) => {
   const insets = useSafeAreaInsets();
   const [activeGenre, setActiveGenre] = useState('Semua');
 
@@ -49,6 +50,11 @@ const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent }) => {
         style={styles.hero}
       >
         <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.heroGradient}>
+          {onBack && (
+            <Pressable onPress={onBack} style={styles.backButton}>
+              <Ionicons name="chevron-back" size={22} color={COLORS.white} />
+            </Pressable>
+          )}
           <Animated.View entering={FadeInDown.springify()}>
             <Text style={styles.heroOverline}>BEACH CLUB</Text>
             <Text style={styles.heroTitle}>Events &{'\n'}Experiences</Text>
@@ -124,6 +130,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.offWhite },
   hero: { height: 220 },
   heroGradient: { flex: 1, justifyContent: 'flex-end', padding: SPACING.xl },
+  backButton: {
+    position: 'absolute', top: 12, left: 16,
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center', justifyContent: 'center',
+  },
   heroOverline: { ...TYPOGRAPHY.overline, color: COLORS.accentWarm, fontSize: 11, marginBottom: 4 },
   heroTitle: { ...TYPOGRAPHY.h1, color: COLORS.white },
   heroSubtitle: { ...TYPOGRAPHY.body, color: COLORS.gray300, marginTop: 4 },

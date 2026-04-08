@@ -35,6 +35,7 @@ interface HomeScreenProps {
   onNavigateSearch: () => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
+  onNavigateMap?: () => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -45,6 +46,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateSearch,
   onNavigateFnB,
   onNavigateWahana,
+  onNavigateMap,
 }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
@@ -73,7 +75,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     { icon: 'restaurant', label: 'F&B', color: COLORS.accent, onPress: onNavigateFnB },
     { icon: 'boat', label: 'Wahana', color: COLORS.teal, onPress: onNavigateWahana },
     { icon: 'musical-notes', label: 'Events', color: COLORS.coral, onPress: onNavigateEvents },
-    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: () => {} },
+    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: onNavigateMap || (() => {}) },
   ];
 
   const formatPrice = (price: number) => 'Rp ' + price.toLocaleString('id-ID');

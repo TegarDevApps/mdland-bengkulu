@@ -188,10 +188,29 @@ export const USER: User = {
 
 // ─── MAP MARKERS ───────────────────────────────────────────
 export const MAP_MARKERS: MapMarker[] = [
-  { id: 'm1', title: 'MDLAND Reception', description: 'Main Lobby', coordinate: { latitude: -3.7928, longitude: 102.2608 }, type: 'villa', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400' },
-  { id: 'm2', title: 'Ocean Kitchen', description: 'Restaurant', coordinate: { latitude: -3.7935, longitude: 102.2615 }, type: 'restaurant', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' },
-  { id: 'm3', title: 'Beach Club', description: 'Events', coordinate: { latitude: -3.7920, longitude: 102.2600 }, type: 'event', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' },
-  { id: 'm4', title: 'Water Sports', description: 'Wahana', coordinate: { latitude: -3.7940, longitude: 102.2595 }, type: 'wahana', image: 'https://images.unsplash.com/photo-1621252179027-94459d278660?w=400' },
+  // ── Villas ──
+  { id: 'm1', title: 'Oceanfront Suite', description: 'Villa Premium · 3 Kamar', coordinate: { latitude: -3.7838, longitude: 102.2525 }, type: 'villa', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400', rating: 4.9, reviewCount: 245, price: 3500000, category: 'premium', isOpen: true },
+  { id: 'm2', title: 'Sunset Villa', description: 'Villa Deluxe · 2 Kamar', coordinate: { latitude: -3.7856504265064865, longitude: 102.25445085755116 }, type: 'villa', image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', rating: 4.7, reviewCount: 189, price: 2800000, category: 'deluxe', isOpen: true },
+  { id: 'm3', title: 'Garden Cottage', description: 'Villa Standard · 1 Kamar', coordinate: { latitude: -3.7855, longitude: 102.2510 }, type: 'villa', image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400', rating: 4.5, reviewCount: 132, price: 1800000, category: 'standard', isOpen: true },
+
+  // ── Restaurants ──
+  { id: 'm4', title: 'Ocean Kitchen', description: 'Seafood & Indonesian', coordinate: { latitude: -3.7852134373607798, longitude: 102.25210207571139}, type: 'restaurant', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400', rating: 4.8, reviewCount: 412, price: 150000, category: 'seafood', isOpen: true },
+  { id: 'm5', title: 'Bamboo Grill', description: 'BBQ & Steak House', coordinate: { latitude: -3.7849323025161605, longitude: 102.2528435683876 }, type: 'restaurant', image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', rating: 4.6, reviewCount: 287, price: 200000, category: 'grill', isOpen: true },
+
+  // ── Wahana ──
+  { id: 'm6', title: "Pirate's Revenge", description: 'Thrill Rides', coordinate: { latitude: -3.7847182267230144, longitude: 102.25293050348753 }, type: 'wahana', image: 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?w=400', rating: 4.5, reviewCount: 1980, price: 40000, category: 'adventure', waitTime: 25, isOpen: true },
+  { id: 'm7', title: 'Sky Wheel', description: 'Family Rides', coordinate: { latitude: -3.7840477872545755, longitude: 102.25204862875809 }, type: 'wahana', image: 'https://images.unsplash.com/photo-1570179538662-faa5e38a5994?w=400', rating: 4.3, reviewCount: 876, price: 30000, category: 'family', waitTime: 15, isOpen: true },
+  { id: 'm8', title: 'Wave Pool', description: 'Water Park', coordinate: { latitude: -3.78555246601874, longitude: 102.25171649411975 }, type: 'wahana', image: 'https://images.unsplash.com/photo-1621252179027-94459d278660?w=400', rating: 4.8, reviewCount: 2341, price: 50000, category: 'water', waitTime: 10, isOpen: true },
+
+  // ── Events ──
+  { id: 'm9', title: 'Beach Club Stage', description: 'Live Music & DJ', coordinate: { latitude: -3.7838592697694686, longitude: 102.2527576552265 }, type: 'event', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400', rating: 4.7, reviewCount: 1200, price: 100000, category: 'music', isOpen: true },
+  { id: 'm10', title: 'Sunset Lounge', description: 'Acoustic Night', coordinate: { latitude: -3.7854381599241242, longitude: 102.25097768784981}, type: 'event', image: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400', rating: 4.5, reviewCount: 567, price: 75000, category: 'music', isOpen: true },
+
+  // ── Facilities ──
+  { id: 'm11', title: 'MDLAND Reception', description: 'Lobby Utama', coordinate: { latitude: -3.784517939126953, longitude: 102.25313460257593 }, type: 'facility', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400', rating: 4.8, reviewCount: 890, isOpen: true },
+  { id: 'm12', title: 'Spa & Wellness', description: 'Relaksasi & Massage', coordinate: { latitude: -3.7853545941081435, longitude: 102.25231852098672 }, type: 'facility', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400', rating: 4.9, reviewCount: 345, price: 250000, isOpen: true },
+  { id: 'm13', title: 'Kids Zone', description: 'Area Bermain Anak', coordinate: { latitude: -3.7854791236995493, longitude: 102.25203053937747 }, type: 'facility', image: 'https://images.unsplash.com/photo-1587655100339-cc06f9a8f042?w=400', rating: 4.4, reviewCount: 234, isOpen: true },
+  { id: 'm14', title: 'Parking Area', description: 'Parkir Luas & Aman', coordinate: { latitude: -3.7847325403911025, longitude: 102.25335294507066 }, type: 'facility', image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=400', rating: 4.2, reviewCount: 120, isOpen: true },
 ];
 
 // ─── ONBOARDING ────────────────────────────────────────────
