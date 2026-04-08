@@ -150,4 +150,6 @@ export type RootStackParamList = {
   PersonalInfo: undefined;
   PaymentHistory: undefined;
   Notifications: undefined;
+  ChatList: undefined;
+  ChatRoom: { contact: any };
 };

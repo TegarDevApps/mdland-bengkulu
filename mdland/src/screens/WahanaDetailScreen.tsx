@@ -34,9 +34,10 @@ interface WahanaDetailScreenProps {
   wahana: Wahana;
   onBack: () => void;
   onBuyTicket: (wahana: Wahana, qty: number, total: number) => void;
+  onChat?: () => void;
 }
 
-const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack, onBuyTicket }) => {
+const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack, onBuyTicket, onChat }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const [activeTab, setActiveTab] = useState(0);
@@ -336,6 +337,10 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
           <Text style={styles.bottomLabel}>Total</Text>
           <Text style={styles.bottomTotal}>{formatPrice(Math.round(total * 1.05))}</Text>
         </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <Pressable onPress={onChat} style={styles.chatFloatBtn}>
+          <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
+        </Pressable>
         <Pressable
           onPress={() => onBuyTicket(wahana, ticketQty, Math.round(total * 1.05))}
           style={[styles.buyButton, !wahana.available && { opacity: 0.5 }]}
@@ -350,6 +355,7 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             <Text style={styles.buyText}>{wahana.available ? 'Beli Tiket' : 'Tidak Tersedia'}</Text>
           </LinearGradient>
         </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -484,6 +490,11 @@ const styles = StyleSheet.create({
   },
   bottomLabel: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
   bottomTotal: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
+  chatFloatBtn: {
+    width: 46, height: 46, borderRadius: 16,
+    backgroundColor: COLORS.primary + '10', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: COLORS.primary + '20',
+  },
   buyButton: { borderRadius: RADIUS.xl, overflow: 'hidden' },
   buyGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
   buyText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },

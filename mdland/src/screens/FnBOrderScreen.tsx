@@ -25,9 +25,10 @@ interface FnBOrderScreenProps {
   restaurant: Restaurant;
   onBack: () => void;
   onCheckout: (items: { item: DiningItem; qty: number }[], total: number) => void;
+  onChat?: () => void;
 }
 
-const FnBOrderScreen: React.FC<FnBOrderScreenProps> = ({ restaurant, onBack, onCheckout }) => {
+const FnBOrderScreen: React.FC<FnBOrderScreenProps> = ({ restaurant, onBack, onCheckout, onChat }) => {
   const insets = useSafeAreaInsets();
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [cart, setCart] = useState<Map<string, number>>(new Map());
@@ -124,6 +125,9 @@ const FnBOrderScreen: React.FC<FnBOrderScreenProps> = ({ restaurant, onBack, onC
           <Text style={styles.headerTitle}>{restaurant.name}</Text>
           <Text style={styles.headerSubtitle}>{restaurant.cuisine}</Text>
         </View>
+        <Pressable onPress={onChat} style={styles.chatHeaderBtn}>
+          <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
+        </Pressable>
       </View>
 
       {/* Category Tabs */}
@@ -196,6 +200,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md,
   },
   backBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginRight: 8 },
+  chatHeaderBtn: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: COLORS.primary + '10', alignItems: 'center', justifyContent: 'center',
+  },
   headerTitle: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
   headerSubtitle: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
 

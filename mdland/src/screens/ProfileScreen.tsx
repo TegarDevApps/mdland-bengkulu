@@ -25,6 +25,7 @@ const MENU_ITEMS = [
   { icon: 'person-outline', title: 'Personal Info', subtitle: 'Name, email, phone', key: 'personalInfo' },
   { icon: 'receipt-outline', title: 'Riwayat Pembayaran', subtitle: 'History transaksi', key: 'paymentHistory' },
   { icon: 'notifications-outline', title: 'Notifications', subtitle: 'Alerts and preferences', key: 'notifications' },
+  { icon: 'chatbubble-ellipses-outline', title: 'Chat', subtitle: 'Pesan & percakapan', key: 'chat' },
   { icon: 'shield-outline', title: 'Privacy & Security', subtitle: 'Password, 2FA', key: 'privacy' },
   { icon: 'language-outline', title: 'Language & Region', subtitle: 'English, USD', key: 'language' },
   { icon: 'help-circle-outline', title: 'Help & Support', subtitle: 'FAQs, contact us', key: 'help' },
@@ -35,12 +36,14 @@ interface ProfileScreenProps {
   onNavigatePersonalInfo?: () => void;
   onNavigatePaymentHistory?: () => void;
   onNavigateNotifications?: () => void;
+  onNavigateChat?: () => void;
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onNavigatePersonalInfo,
   onNavigatePaymentHistory,
   onNavigateNotifications,
+  onNavigateChat,
 }) => {
   const insets = useSafeAreaInsets();
   const tierColor = TIER_COLORS[USER.tier];
@@ -117,6 +120,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   if (item.key === 'personalInfo') onNavigatePersonalInfo?.();
                   else if (item.key === 'paymentHistory') onNavigatePaymentHistory?.();
                   else if (item.key === 'notifications') onNavigateNotifications?.();
+                  else if (item.key === 'chat') onNavigateChat?.();
                 }}
               >
                 <View style={styles.menuIcon}>

@@ -25,6 +25,8 @@ import EventsScreen from '../screens/EventsScreen';
 import PersonalInfoScreen from '../screens/PersonalInfoScreen';
 import PaymentHistoryScreen from '../screens/PaymentHistoryScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
+import ChatListScreen from '../screens/ChatListScreen';
+import ChatRoomScreen from '../screens/ChatRoomScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -100,6 +102,7 @@ const AppNavigator: React.FC = () => {
               onNavigatePersonalInfo={() => props.navigation.navigate('PersonalInfo')}
               onNavigatePaymentHistory={() => props.navigation.navigate('PaymentHistory')}
               onNavigateNotifications={() => props.navigation.navigate('Notifications')}
+              onNavigateChat={() => props.navigation.navigate('ChatList')}
             />
           )}
         </Stack.Screen>
@@ -113,6 +116,21 @@ const AppNavigator: React.FC = () => {
               onBook={() =>
                 props.navigation.navigate('Booking', {
                   villa: props.route.params.villa,
+                })
+              }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `villa-${props.route.params.villa.id}`,
+                    name: props.route.params.villa.name,
+                    avatar: props.route.params.villa.images[0],
+                    role: 'Villa Host',
+                    category: 'villa',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
                 })
               }
             />
@@ -204,6 +222,21 @@ const AppNavigator: React.FC = () => {
               onCheckout={(items, total) =>
                 props.navigation.navigate('FnBCart', { items, total })
               }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `resto-${props.route.params.restaurant.id}`,
+                    name: props.route.params.restaurant.name,
+                    avatar: props.route.params.restaurant.image,
+                    role: 'Restaurant Manager',
+                    category: 'restaurant',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
+              }
             />
           )}
         </Stack.Screen>
@@ -243,6 +276,21 @@ const AppNavigator: React.FC = () => {
                   itemName: _wahana.name,
                 })
               }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `wahana-${props.route.params.wahana.id}`,
+                    name: props.route.params.wahana.name,
+                    avatar: props.route.params.wahana.image,
+                    role: 'Wahana Operator',
+                    category: 'wahana',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
+              }
             />
           )}
         </Stack.Screen>
@@ -266,6 +314,21 @@ const AppNavigator: React.FC = () => {
                   itemName: _event.title,
                 })
               }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `event-${props.route.params.event.id}`,
+                    name: props.route.params.event.title,
+                    avatar: props.route.params.event.image,
+                    role: 'Event Organizer',
+                    category: 'event',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
+              }
             />
           )}
         </Stack.Screen>
@@ -286,6 +349,27 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="Notifications" options={{ animation: 'slide_from_right' }}>
           {(props: any) => (
             <NotificationsScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        {/* Chat Flow */}
+        <Stack.Screen name="ChatList" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <ChatListScreen
+              onBack={() => props.navigation.goBack()}
+              onOpenChat={(contact) =>
+                props.navigation.navigate('ChatRoom', { contact })
+              }
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="ChatRoom" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <ChatRoomScreen
+              contact={props.route.params.contact}
+              onBack={() => props.navigation.goBack()}
+            />
           )}
         </Stack.Screen>
       </Stack.Navigator>
