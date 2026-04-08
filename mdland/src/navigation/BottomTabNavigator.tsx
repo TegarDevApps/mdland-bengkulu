@@ -44,15 +44,19 @@ const TabIcon: React.FC<TabIconProps> = ({ name, focused, color, size }) => {
 };
 
 interface BottomTabNavigatorProps {
-  onNavigateResort: (resort: any) => void;
+  onNavigateVilla: (villa: any) => void;
   onNavigateSearch: () => void;
   onNavigateEvents: () => void;
+  onNavigateFnB: () => void;
+  onNavigateWahana: () => void;
 }
 
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
-  onNavigateResort,
+  onNavigateVilla,
   onNavigateSearch,
   onNavigateEvents,
+  onNavigateFnB,
+  onNavigateWahana,
 }) => {
   return (
     <Tab.Navigator
@@ -75,10 +79,12 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
       >
         {() => (
           <HomeScreen
-            onNavigateResort={onNavigateResort}
+            onNavigateVilla={onNavigateVilla}
             onNavigateExplore={() => {}}
             onNavigateEvents={onNavigateEvents}
             onNavigateSearch={onNavigateSearch}
+            onNavigateFnB={onNavigateFnB}
+            onNavigateWahana={onNavigateWahana}
           />
         )}
       </Tab.Screen>
@@ -91,7 +97,7 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           ),
         }}
       >
-        {() => <ExploreScreen onNavigateResort={onNavigateResort} />}
+        {() => <ExploreScreen onNavigateVilla={onNavigateVilla} />}
       </Tab.Screen>
 
       <Tab.Screen

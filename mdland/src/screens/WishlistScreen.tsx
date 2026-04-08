@@ -12,13 +12,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
-import { RESORTS } from '../data/mockData';
+import { VILLAS } from '../data/mockData';
 import AnimatedButton from '../components/common/AnimatedButton';
 
 const WishlistScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  // Simulated wishlist with first 3 resorts
-  const wishlistItems = RESORTS.slice(0, 3);
+  // Simulated wishlist with first 3 villas
+  const wishlistItems = VILLAS.slice(0, 3);
 
   const renderItem = ({ item, index }: any) => (
     <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
@@ -28,10 +28,10 @@ const WishlistScreen: React.FC = () => {
           <Text style={styles.cardName} numberOfLines={1}>{item.name}</Text>
           <View style={styles.cardLocation}>
             <Ionicons name="location" size={13} color={COLORS.primary} />
-            <Text style={styles.cardLocationText}>{item.location}</Text>
+            <Text style={styles.cardLocationText}>MDLAND Bengkulu</Text>
           </View>
           <View style={styles.cardFooter}>
-            <Text style={styles.cardPrice}>${item.pricePerNight}/night</Text>
+            <Text style={styles.cardPrice}>Rp {item.pricePerNight.toLocaleString('id-ID')}/malam</Text>
             <View style={styles.ratingBadge}>
               <Ionicons name="star" size={12} color={COLORS.accentWarm} />
               <Text style={styles.ratingText}>{item.rating}</Text>
@@ -51,7 +51,7 @@ const WishlistScreen: React.FC = () => {
 
       <View style={styles.header}>
         <Text style={styles.title}>Wishlist</Text>
-        <Text style={styles.subtitle}>{wishlistItems.length} saved destinations</Text>
+        <Text style={styles.subtitle}>{wishlistItems.length} villa tersimpan</Text>
       </View>
 
       <FlatList
@@ -65,11 +65,11 @@ const WishlistScreen: React.FC = () => {
             <View style={styles.emptyIcon}>
               <Ionicons name="heart-outline" size={48} color={COLORS.gray300} />
             </View>
-            <Text style={styles.emptyTitle}>No saved destinations</Text>
+            <Text style={styles.emptyTitle}>Belum ada favorit</Text>
             <Text style={styles.emptySubtitle}>
-              Start exploring and save your favorite resorts
+              Jelajahi dan simpan villa favorit Anda
             </Text>
-            <AnimatedButton title="Explore Resorts" onPress={() => {}} variant="gradient" size="md" />
+            <AnimatedButton title="Jelajahi Villa" onPress={() => {}} variant="gradient" size="md" />
           </Animated.View>
         }
       />

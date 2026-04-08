@@ -1,20 +1,5 @@
-export interface Resort {
-  id: string;
-  name: string;
-  location: string;
-  description: string;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  pricePerNight: number;
-  amenities: string[];
-  coordinates: { latitude: number; longitude: number };
-  featured: boolean;
-}
-
 export interface Villa {
   id: string;
-  resortId: string;
   name: string;
   description: string;
   images: string[];
@@ -25,6 +10,21 @@ export interface Villa {
   amenities: string[];
   rating: number;
   available: boolean;
+  category: 'standard' | 'deluxe' | 'premium' | 'suite';
+}
+
+export interface Wahana {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  duration: string;
+  capacity: number;
+  category: 'water' | 'adventure' | 'family' | 'leisure';
+  rating: number;
+  available: boolean;
+  minAge?: number;
 }
 
 export interface Event {
@@ -47,7 +47,7 @@ export interface DiningItem {
   description: string;
   image: string;
   price: number;
-  category: 'appetizer' | 'main' | 'dessert' | 'cocktail' | 'wine' | 'beer';
+  category: 'appetizer' | 'main' | 'dessert' | 'snack' | 'beverage' | 'cocktail';
   rating: number;
   isSignature: boolean;
 }
@@ -64,14 +64,23 @@ export interface Restaurant {
   items: DiningItem[];
 }
 
+export interface CartItem {
+  item: DiningItem | Wahana;
+  quantity: number;
+  type: 'food' | 'wahana';
+}
+
 export interface Booking {
   id: string;
-  villaId: string;
-  villaName: string;
-  resortName: string;
+  villaId?: string;
+  villaName?: string;
+  wahanaId?: string;
+  wahanaName?: string;
+  type: 'villa' | 'wahana' | 'food';
   image: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn?: string;
+  checkOut?: string;
+  date?: string;
   guests: number;
   totalPrice: number;
   status: 'upcoming' | 'active' | 'completed' | 'cancelled';
@@ -92,7 +101,7 @@ export interface MapMarker {
   title: string;
   description: string;
   coordinate: { latitude: number; longitude: number };
-  type: 'resort' | 'restaurant' | 'event' | 'activity';
+  type: 'villa' | 'restaurant' | 'event' | 'wahana';
   image: string;
 }
 
@@ -105,14 +114,18 @@ export type RootStackParamList = {
   MainTabs: undefined;
   Home: undefined;
   Explore: undefined;
-  ResortDetail: { resort: Resort };
-  VillaDetail: { villa: Villa; resortName: string };
-  Booking: { villa: Villa; resortName: string };
-  Payment: { villa: Villa; checkIn: string; checkOut: string; guests: number; totalPrice: number };
-  BookingSuccess: { bookingId: string };
+  VillaDetail: { villa: Villa };
+  BookingVilla: { villa: Villa };
+  Payment: { totalPrice: number; type: string; itemName: string };
+  BookingSuccess: undefined;
   Events: undefined;
   MapView: undefined;
-  Dining: undefined;
+  FnB: undefined;
+  FnBOrder: { restaurant: Restaurant };
+  FnBCart: undefined;
+  WahanaList: undefined;
+  WahanaDetail: { wahana: Wahana };
+  WahanaTicket: { wahana: Wahana };
   Wishlist: undefined;
   Profile: undefined;
   MyBookings: undefined;

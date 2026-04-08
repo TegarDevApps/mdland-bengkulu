@@ -4,7 +4,6 @@ export { SkeletonLoader, SkeletonCard } from './common/SkeletonLoader';
 export { RatingStars } from './common/RatingStars';
 export { SearchBar } from './common/SearchBar';
 export { FloatingCTA } from './common/FloatingCTA';
-export { ResortCard } from './cards/ResortCard';
 export { VillaCard } from './cards/VillaCard';
 export { EventCard } from './cards/EventCard';
 export { ImageCarousel } from './ImageCarousel';

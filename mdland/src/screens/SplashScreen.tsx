@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Image } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -88,17 +88,18 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
 
       {/* Logo */}
       <Animated.View style={[styles.logoContainer, logoStyle]}>
-        <View style={styles.logoIcon}>
-          <Text style={styles.logoLetter}>M</Text>
-        </View>
+        <Image
+          source={require('../../assets/mdland-logo.jpeg')}
+          style={styles.logoImage}
+        />
         <Text style={styles.logoText}>MDLAND</Text>
       </Animated.View>
 
       {/* Tagline */}
       <Animated.View style={[styles.taglineContainer, taglineStyle]}>
-        <Text style={styles.tagline}>Luxury Beach Living</Text>
+        <Text style={styles.tagline}>MDLAND Bengkulu</Text>
         <View style={styles.divider} />
-        <Text style={styles.subTagline}>PREMIUM RESORT EXPERIENCE</Text>
+        <Text style={styles.subTagline}>LUXURY BEACH RESORT</Text>
       </Animated.View>
     </LinearGradient>
   );
@@ -121,20 +122,11 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
   },
-  logoIcon: {
-    width: 80,
-    height: 80,
+  logoImage: {
+    width: 100,
+    height: 100,
     borderRadius: 24,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: 20,
-  },
-  logoLetter: {
-    fontSize: 42,
-    fontWeight: '900',
-    color: COLORS.primary,
-    letterSpacing: -2,
   },
   logoText: {
     fontSize: 48,

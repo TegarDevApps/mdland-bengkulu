@@ -38,19 +38,21 @@ const MyBookingsScreen: React.FC = () => {
                 {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
               </Text>
             </View>
-            <Text style={styles.bookingVilla} numberOfLines={1}>{item.villaName}</Text>
-            <Text style={styles.bookingResort}>{item.resortName}</Text>
+            <Text style={styles.bookingVilla} numberOfLines={1}>
+              {item.villaName || item.wahanaName || 'Pesanan F&B'}
+            </Text>
+            <Text style={styles.bookingResort}>MDLAND Bengkulu</Text>
             <View style={styles.bookingDates}>
               <Ionicons name="calendar-outline" size={13} color={COLORS.gray500} />
               <Text style={styles.bookingDateText}>
-                {new Date(item.checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                {' – '}
-                {new Date(item.checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                {item.checkIn
+                  ? `${new Date(item.checkIn).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })} – ${new Date(item.checkOut!).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                  : item.date || '-'}
               </Text>
             </View>
             <View style={styles.bookingFooter}>
-              <Text style={styles.bookingPrice}>${item.totalPrice.toLocaleString()}</Text>
-              <Text style={styles.bookingGuests}>{item.guests} guests</Text>
+              <Text style={styles.bookingPrice}>Rp {item.totalPrice.toLocaleString('id-ID')}</Text>
+              <Text style={styles.bookingGuests}>{item.guests} tamu</Text>
             </View>
           </View>
         </Pressable>
@@ -63,8 +65,8 @@ const MyBookingsScreen: React.FC = () => {
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <Text style={styles.title}>My Bookings</Text>
-        <Text style={styles.subtitle}>{BOOKINGS.length} trips</Text>
+        <Text style={styles.title}>Booking Saya</Text>
+        <Text style={styles.subtitle}>{BOOKINGS.length} pesanan</Text>
       </View>
 
       <FlatList

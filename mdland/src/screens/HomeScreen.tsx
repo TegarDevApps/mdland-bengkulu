@@ -23,31 +23,33 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../constants/theme';
-import { RESORTS, EVENTS, USER } from '../data/mockData';
-import { Resort } from '../types';
-import ResortCard from '../components/cards/ResortCard';
+import { VILLAS, EVENTS, USER, WAHANA } from '../data/mockData';
+import { Villa } from '../types';
 import EventCard from '../components/cards/EventCard';
-import { SkeletonCard } from '../components/common/SkeletonLoader';
 
 interface HomeScreenProps {
-  onNavigateResort: (resort: Resort) => void;
+  onNavigateVilla: (villa: Villa) => void;
   onNavigateExplore: () => void;
   onNavigateEvents: () => void;
   onNavigateSearch: () => void;
+  onNavigateFnB: () => void;
+  onNavigateWahana: () => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
-  onNavigateResort,
+  onNavigateVilla,
   onNavigateExplore,
   onNavigateEvents,
   onNavigateSearch,
+  onNavigateFnB,
+  onNavigateWahana,
 }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
+    const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -61,30 +63,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     backgroundColor: `rgba(255,255,255,${interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP)})`,
   }));
 
-  const featuredResorts = RESORTS.filter(r => r.featured);
   const upcomingEvents = EVENTS.slice(0, 3);
+  const featuredWahana = WAHANA.slice(0, 4);
 
   const categories = [
-    { icon: 'water', label: 'Beach', color: COLORS.teal },
-    { icon: 'restaurant', label: 'Dining', color: COLORS.accent },
-    { icon: 'musical-notes', label: 'Events', color: COLORS.coral },
-    { icon: 'fitness', label: 'Wellness', color: COLORS.palm },
-    { icon: 'boat', label: 'Activities', color: COLORS.lagoon },
+    { icon: 'home', label: 'Villa', color: COLORS.primary, onPress: onNavigateExplore },
+    { icon: 'restaurant', label: 'F&B', color: COLORS.accent, onPress: onNavigateFnB },
+    { icon: 'boat', label: 'Wahana', color: COLORS.teal, onPress: onNavigateWahana },
+    { icon: 'musical-notes', label: 'Events', color: COLORS.coral, onPress: onNavigateEvents },
+    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: () => {} },
   ];
+
+  const formatPrice = (price: number) => 'Rp ' + price.toLocaleString('id-ID');
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      {/* Animated Header */}
+      {/* Header */}
       <Animated.View style={[styles.header, { paddingTop: insets.top }, headerStyle]}>
         <View style={styles.headerLeft}>
           <Image
-            source={{ uri: USER.avatar }}
-            style={styles.avatar}
+            source={require('../../assets/mdland-logo.jpeg')}
+            style={styles.logoImage}
           />
           <View>
-            <Text style={styles.greeting}>Good morning,</Text>
+            <Text style={styles.greeting}>Selamat datang,</Text>
             <Text style={styles.userName}>{USER.name.split(' ')[0]}</Text>
           </View>
         </View>
@@ -109,21 +113,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         <Animated.View entering={FadeInDown.delay(100).springify()} style={styles.heroBanner}>
           <LinearGradient
             colors={COLORS.gradientOcean as any}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 1, y: 2 }}
             style={styles.heroGradient}
           >
             <View style={styles.heroContent}>
-              <Text style={styles.heroOverline}>EXCLUSIVE OFFER</Text>
-              <Text style={styles.heroTitle}>Summer{'\n'}Paradise</Text>
-              <Text style={styles.heroSubtitle}>Up to 40% off on premium villas</Text>
-              <Pressable style={styles.heroButton}>
-                <Text style={styles.heroButtonText}>Book Now</Text>
+              <Text style={styles.heroOverline}>MDLAND BENGKULU</Text>
+              <Text style={styles.heroTitle}>Hi, Welcome!</Text>
+              <Text style={styles.heroSubtitle}>Villa, wahana air, & kuliner terbaik</Text>
+              <Pressable onPress={onNavigateExplore} style={styles.heroButton}>
+                <Text style={styles.heroButtonText}>Jelajahi</Text>
                 <Ionicons name="arrow-forward" size={16} color={COLORS.primary} />
               </Pressable>
-            </View>
-            <View style={styles.heroImagePlaceholder}>
-              <Text style={styles.heroEmoji}>🏝️</Text>
             </View>
           </LinearGradient>
         </Animated.View>
@@ -140,7 +141,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
                 key={cat.label}
                 entering={FadeInRight.delay(200 + index * 80).springify()}
               >
-                <Pressable style={styles.categoryItem}>
+                <Pressable style={styles.categoryItem} onPress={cat.onPress}>
                   <View style={[styles.categoryIcon, { backgroundColor: cat.color + '15' }]}>
                     <Ionicons name={cat.icon as any} size={22} color={cat.color} />
                   </View>
@@ -151,78 +152,92 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
           </ScrollView>
         </Animated.View>
 
-        {/* Featured Resorts */}
+        {/* Popular Villas */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View>
-              <Text style={styles.sectionTitle}>Featured Resorts</Text>
-              <Text style={styles.sectionSubtitle}>Handpicked luxury destinations</Text>
+              <Text style={styles.sectionTitle}>Villa Populer</Text>
+              <Text style={styles.sectionSubtitle}>Pilihan akomodasi terbaik</Text>
             </View>
             <Pressable onPress={onNavigateExplore} style={styles.seeAllButton}>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Text style={styles.seeAllText}>Lihat Semua</Text>
               <Ionicons name="arrow-forward" size={14} color={COLORS.primary} />
             </Pressable>
           </View>
 
-          {loading ? (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          ) : (
-            <FlatList
-              data={featuredResorts}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingLeft: SPACING.xl }}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item, index }) => (
-                <ResortCard
-                  resort={item}
-                  onPress={() => onNavigateResort(item)}
-                  variant="medium"
-                  index={index}
-                />
-              )}
-            />
-          )}
+          <FlatList
+            data={VILLAS.filter(v => v.available).slice(0, 4)}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: SPACING.xl }}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <Animated.View entering={FadeInRight.delay(index * 100).springify()}>
+                <Pressable
+                  onPress={() => onNavigateVilla(item)}
+                  style={styles.villaCard}
+                >
+                  <Image source={{ uri: item.images[0] }} style={styles.villaCardImage} />
+                  <LinearGradient
+                    colors={['transparent', 'rgba(0,0,0,0.7)']}
+                    style={styles.villaCardGradient}
+                  >
+                    <Text style={styles.villaCardName}>{item.name}</Text>
+                    <Text style={styles.villaCardPrice}>{formatPrice(item.pricePerNight)}/malam</Text>
+                  </LinearGradient>
+                  <View style={styles.villaCardRating}>
+                    <Ionicons name="star" size={12} color={COLORS.accent} />
+                    <Text style={styles.villaCardRatingText}>{item.rating}</Text>
+                  </View>
+                </Pressable>
+              </Animated.View>
+            )}
+          />
         </View>
 
-        {/* Popular Destinations */}
+        {/* Wahana Seru */}
         <View style={styles.section}>
           <View style={[styles.sectionHeader, { paddingHorizontal: SPACING.xl }]}>
             <View>
-              <Text style={styles.sectionTitle}>Popular Destinations</Text>
-              <Text style={styles.sectionSubtitle}>Where travelers love to go</Text>
+              <Text style={styles.sectionTitle}>Wahana Seru</Text>
+              <Text style={styles.sectionSubtitle}>Aktivitas air & petualangan</Text>
             </View>
+            <Pressable onPress={onNavigateWahana} style={styles.seeAllButton}>
+              <Text style={styles.seeAllText}>Lihat Semua</Text>
+              <Ionicons name="arrow-forward" size={14} color={COLORS.primary} />
+            </Pressable>
           </View>
 
-          <View style={{ paddingHorizontal: SPACING.xl }}>
-            {loading ? (
-              <SkeletonCard />
-            ) : (
-              RESORTS.slice(0, 2).map((resort, index) => (
-                <ResortCard
-                  key={resort.id}
-                  resort={resort}
-                  onPress={() => onNavigateResort(resort)}
-                  variant="large"
-                  index={index}
-                />
-              ))
+          <FlatList
+            data={featuredWahana}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: SPACING.xl }}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <Animated.View entering={FadeInRight.delay(index * 80).springify()}>
+                <Pressable onPress={onNavigateWahana} style={styles.wahanaCard}>
+                  <Image source={{ uri: item.image }} style={styles.wahanaImage} />
+                  <View style={styles.wahanaInfo}>
+                    <Text style={styles.wahanaName} numberOfLines={1}>{item.name}</Text>
+                    <Text style={styles.wahanaDuration}>{item.duration}</Text>
+                    <Text style={styles.wahanaPrice}>{formatPrice(item.price)}</Text>
+                  </View>
+                </Pressable>
+              </Animated.View>
             )}
-          </View>
+          />
         </View>
 
         {/* Upcoming Events */}
         <View style={styles.section}>
           <View style={[styles.sectionHeader, { paddingHorizontal: SPACING.xl }]}>
             <View>
-              <Text style={styles.sectionTitle}>Upcoming Events</Text>
-              <Text style={styles.sectionSubtitle}>Music, vibes & unforgettable nights</Text>
+              <Text style={styles.sectionTitle}>Event Mendatang</Text>
+              <Text style={styles.sectionSubtitle}>Musik & hiburan malam</Text>
             </View>
             <Pressable onPress={onNavigateEvents} style={styles.seeAllButton}>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Text style={styles.seeAllText}>Lihat Semua</Text>
               <Ionicons name="arrow-forward" size={14} color={COLORS.primary} />
             </Pressable>
           </View>
@@ -249,8 +264,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.membershipGradient}
           >
             <View>
-              <Text style={styles.membershipTitle}>MDLAND Platinum</Text>
-              <Text style={styles.membershipSubtitle}>Unlock exclusive perks & rewards</Text>
+              <Text style={styles.membershipTitle}>MDLAND Member</Text>
+              <Text style={styles.membershipSubtitle}>Dapatkan diskon & reward eksklusif</Text>
             </View>
             <Ionicons name="diamond" size={36} color="rgba(255,255,255,0.4)" />
           </LinearGradient>
@@ -263,19 +278,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.offWhite },
   header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
+    position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: SPACING.xl, paddingBottom: SPACING.md,
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  avatar: { width: 44, height: 44, borderRadius: 22, borderWidth: 2, borderColor: COLORS.primary },
+  logoImage: { width: 44, height: 44, borderRadius: 12 },
   greeting: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
   userName: { ...TYPOGRAPHY.h4, color: COLORS.gray800 },
   headerRight: { flexDirection: 'row', gap: 8 },
@@ -286,19 +294,13 @@ const styles = StyleSheet.create({
   },
   notifDot: {
     position: 'absolute', top: 10, right: 10,
-    width: 8, height: 8, borderRadius: 4,
-    backgroundColor: COLORS.error,
+    width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.error,
   },
-
-  // Hero
   heroBanner: { marginHorizontal: SPACING.xl, marginBottom: SPACING.xxl },
   heroGradient: {
-    borderRadius: RADIUS.xxl,
-    padding: SPACING.xxl,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minHeight: 180,
-    overflow: 'hidden',
+    borderRadius: RADIUS.xxl, padding: SPACING.xxl,
+    flexDirection: 'row', justifyContent: 'space-between',
+    minHeight: 180, overflow: 'hidden',
   },
   heroContent: { flex: 1 },
   heroOverline: { ...TYPOGRAPHY.overline, color: 'rgba(255,255,255,0.7)', fontSize: 10, marginBottom: 8 },
@@ -310,40 +312,57 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.round, alignSelf: 'flex-start',
   },
   heroButtonText: { ...TYPOGRAPHY.buttonSm, color: COLORS.primary },
-  heroImagePlaceholder: { justifyContent: 'center', alignItems: 'center' },
-  heroEmoji: { fontSize: 64 },
-
-  // Categories
+  heroLogo: { width: 80, height: 80, borderRadius: 16, opacity: 0.3, alignSelf: 'center' },
   categoriesContainer: { paddingHorizontal: SPACING.xl, gap: 16, marginBottom: SPACING.xxl },
   categoryItem: { alignItems: 'center', gap: 8 },
-  categoryIcon: {
-    width: 56, height: 56, borderRadius: 18,
-    alignItems: 'center', justifyContent: 'center',
-  },
+  categoryIcon: { width: 56, height: 56, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   categoryLabel: { ...TYPOGRAPHY.caption, color: COLORS.gray600 },
-
-  // Sections
   section: { marginBottom: SPACING.xxl },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.lg,
-    paddingHorizontal: SPACING.xl,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: SPACING.lg, paddingHorizontal: SPACING.xl,
   },
   sectionTitle: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
   sectionSubtitle: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2 },
   seeAllButton: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   seeAllText: { ...TYPOGRAPHY.buttonSm, color: COLORS.primary },
 
-  // Membership
+  // Villa horizontal cards
+  villaCard: {
+    width: SCREEN_WIDTH * 0.55, marginRight: SPACING.md,
+    borderRadius: RADIUS.xl, overflow: 'hidden', ...SHADOWS.medium,
+  },
+  villaCardImage: { width: '100%', height: 160 },
+  villaCardGradient: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    padding: SPACING.md, paddingTop: 40,
+  },
+  villaCardName: { ...TYPOGRAPHY.bodyMedium, color: COLORS.white, fontSize: 14 },
+  villaCardPrice: { ...TYPOGRAPHY.caption, color: 'rgba(255,255,255,0.8)', marginTop: 2 },
+  villaCardRating: {
+    position: 'absolute', top: 10, right: 10,
+    flexDirection: 'row', alignItems: 'center', gap: 3,
+    backgroundColor: 'rgba(255,255,255,0.9)', paddingHorizontal: 8, paddingVertical: 4,
+    borderRadius: RADIUS.round,
+  },
+  villaCardRatingText: { ...TYPOGRAPHY.caption, color: COLORS.gray800, fontWeight: '700', fontSize: 12 },
+
+  // Wahana horizontal cards
+  wahanaCard: {
+    width: 150, marginRight: SPACING.md,
+    backgroundColor: COLORS.white, borderRadius: RADIUS.xl, overflow: 'hidden',
+    ...SHADOWS.small,
+  },
+  wahanaImage: { width: '100%', height: 100 },
+  wahanaInfo: { padding: SPACING.sm },
+  wahanaName: { ...TYPOGRAPHY.caption, color: COLORS.gray800, fontWeight: '600', fontSize: 13, marginBottom: 2 },
+  wahanaDuration: { ...TYPOGRAPHY.caption, color: COLORS.gray500, fontSize: 11 },
+  wahanaPrice: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700', fontSize: 13, marginTop: 4 },
+
   membershipBanner: { marginHorizontal: SPACING.xl, marginBottom: SPACING.xl },
   membershipGradient: {
-    borderRadius: RADIUS.xl,
-    padding: SPACING.xl,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderRadius: RADIUS.xl, padding: SPACING.xl,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   },
   membershipTitle: { ...TYPOGRAPHY.h4, color: COLORS.white },
   membershipSubtitle: { ...TYPOGRAPHY.bodySm, color: 'rgba(255,255,255,0.8)', marginTop: 4 },

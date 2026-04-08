@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   ImageBackground,
+  Image,
 } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -48,11 +49,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onNavigateRegister }
           >
             {/* Header */}
             <Animated.View entering={FadeInUp.delay(200).springify()} style={styles.header}>
-              <View style={styles.logoIcon}>
-                <Text style={styles.logoLetter}>M</Text>
-              </View>
-              <Text style={styles.welcomeBack}>Welcome Back</Text>
-              <Text style={styles.subtitle}>Sign in to your MDLAND account</Text>
+              <Image
+                source={require('../../assets/mdland-logo.jpeg')}
+                style={styles.logoImage}
+              />
+              <Text style={styles.welcomeBack}>Selamat Datang</Text>
+              <Text style={styles.subtitle}>Masuk ke akun MDLAND Anda</Text>
             </Animated.View>
 
             {/* Form */}
@@ -151,19 +153,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SPACING.xxxl,
   },
-  logoIcon: {
-    width: 60,
-    height: 60,
+  logoImage: {
+    width: 70,
+    height: 70,
     borderRadius: 18,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: SPACING.xl,
-  },
-  logoLetter: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: COLORS.primary,
   },
   welcomeBack: {
     ...TYPOGRAPHY.h1,

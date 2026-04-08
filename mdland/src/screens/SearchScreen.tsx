@@ -7,12 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
-import { RESORTS, EVENTS, RESTAURANTS } from '../data/mockData';
+import { VILLAS, WAHANA, EVENTS, RESTAURANTS } from '../data/mockData';
 import SearchBar from '../components/common/SearchBar';
 
-type SearchCategory = 'all' | 'resorts' | 'events' | 'dining';
+type SearchCategory = 'all' | 'villas' | 'wahana' | 'events' | 'dining';
 
-const TRENDING = ['Bali', 'Maldives', 'Beach Villa', 'DJ Night', 'Sunset', 'Spa'];
+const TRENDING = ['Villa', 'Jet Ski', 'Flyboard', 'DJ Night', 'Sunset', 'Bebek Air'];
 
 const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
   const insets = useSafeAreaInsets();
@@ -24,9 +24,13 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     if (!q) return [];
 
     const results: any[] = [];
-    if (category === 'all' || category === 'resorts') {
-      RESORTS.filter(r => r.name.toLowerCase().includes(q) || r.location.toLowerCase().includes(q))
-        .forEach(r => results.push({ ...r, type: 'resort' }));
+    if (category === 'all' || category === 'villas') {
+      VILLAS.filter(v => v.name.toLowerCase().includes(q) || v.category.toLowerCase().includes(q))
+        .forEach(v => results.push({ ...v, type: 'villa' }));
+    }
+    if (category === 'all' || category === 'wahana') {
+      WAHANA.filter(w => w.name.toLowerCase().includes(q) || w.category.toLowerCase().includes(q))
+        .forEach(w => results.push({ ...w, type: 'wahana' }));
     }
     if (category === 'all' || category === 'events') {
       EVENTS.filter(e => e.title.toLowerCase().includes(q) || e.genre.toLowerCase().includes(q))
@@ -47,11 +51,13 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         <Image source={{ uri: item.image }} style={styles.resultImage} />
         <View style={styles.resultContent}>
           <View style={[styles.typeBadge, {
-            backgroundColor: item.type === 'resort' ? COLORS.primary + '15' :
+            backgroundColor: item.type === 'villa' ? COLORS.primary + '15' :
+              item.type === 'wahana' ? COLORS.coral + '15' :
               item.type === 'event' ? COLORS.accent + '15' : COLORS.teal + '15'
           }]}>
             <Text style={[styles.typeText, {
-              color: item.type === 'resort' ? COLORS.primary :
+              color: item.type === 'villa' ? COLORS.primary :
+                item.type === 'wahana' ? COLORS.coral :
                 item.type === 'event' ? COLORS.accent : COLORS.teal
             }]}>
               {item.type.toUpperCase()}
@@ -85,14 +91,14 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             value={query}
             onChangeText={setQuery}
             autoFocus
-            placeholder="Search resorts, events, dining..."
+            placeholder="Cari villa, wahana, event..."
           />
         </View>
       </View>
 
       {/* Category Tabs */}
       <View style={styles.categories}>
-        {(['all', 'resorts', 'events', 'dining'] as SearchCategory[]).map(cat => (
+        {(['all', 'villas', 'wahana', 'events', 'dining'] as SearchCategory[]).map(cat => (
           <Pressable
             key={cat}
             onPress={() => setCategory(cat)}
@@ -108,7 +114,7 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
       {/* Content */}
       {query.length === 0 ? (
         <Animated.View entering={FadeIn} style={styles.trending}>
-          <Text style={styles.trendingTitle}>Trending Searches</Text>
+          <Text style={styles.trendingTitle}>Pencarian Populer</Text>
           <View style={styles.trendingGrid}>
             {TRENDING.map((term, index) => (
               <Animated.View key={term} entering={FadeInDown.delay(index * 50)}>
@@ -123,8 +129,8 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             ))}
           </View>
 
-          <Text style={[styles.trendingTitle, { marginTop: SPACING.xxl }]}>Recent Searches</Text>
-          {['MDLAND Paradise Cove', 'Sunset Sessions'].map((recent, index) => (
+          <Text style={[styles.trendingTitle, { marginTop: SPACING.xxl }]}>Pencarian Terbaru</Text>
+          {['Villa Deluxe', 'Jet Ski'].map((recent, index) => (
             <Pressable key={recent} onPress={() => setQuery(recent)} style={styles.recentItem}>
               <Ionicons name="time-outline" size={18} color={COLORS.gray400} />
               <Text style={styles.recentText}>{recent}</Text>

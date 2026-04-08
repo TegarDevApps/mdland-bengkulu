@@ -6,59 +6,73 @@ import {
   ScrollView,
   Pressable,
   FlatList,
+  Image,
 } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
-import { RESORTS } from '../data/mockData';
-import { Resort } from '../types';
-import ResortCard from '../components/cards/ResortCard';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../constants/theme';
+import { VILLAS } from '../data/mockData';
+import { Villa } from '../types';
 import SearchBar from '../components/common/SearchBar';
-import { FilterModal } from '../components/FilterModal';
+
+const TABS = ['Semua', 'Standard', 'Deluxe', 'Premium', 'Suite'];
+const TAB_ICONS: Record<string, string> = {
+  Semua: 'grid-outline',
+  Standard: 'bed-outline',
+  Deluxe: 'flower-outline',
+  Premium: 'diamond-outline',
+  Suite: 'star-outline',
+};
 
 interface ExploreScreenProps {
-  onNavigateResort: (resort: Resort) => void;
+  onNavigateVilla: (villa: Villa) => void;
 }
 
-const TABS = ['All', 'Beach', 'Island', 'Mountain', 'City'];
-
-const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateResort }) => {
+const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateVilla }) => {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('All');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-  const [showFilters, setShowFilters] = useState(false);
+  const [activeTab, setActiveTab] = useState('Semua');
 
-  const filteredResorts = RESORTS.filter(r =>
-    r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredVillas = VILLAS.filter(v => {
+    const matchSearch = v.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      v.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchCategory = activeTab === 'Semua' || v.category.toLowerCase() === activeTab.toLowerCase();
+    return matchSearch && matchCategory;
+  });
+
+  const formatPrice = (price: number) => {
+    return 'Rp ' + price.toLocaleString('id-ID');
+  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="dark" />
 
-      {/* Header */}
       <Animated.View entering={FadeIn} style={styles.header}>
-        <Text style={styles.title}>Explore</Text>
-        <Text style={styles.subtitle}>Discover your perfect escape</Text>
+        <Image
+          source={require('../../assets/mdland-logo.jpeg')}
+          style={styles.headerLogo}
+        />
+        <View>
+          <Text style={styles.title}>Explore Villas</Text>
+          <Text style={styles.subtitle}>MDLAND Bengkulu</Text>
+        </View>
       </Animated.View>
 
-      {/* Search */}
       <View style={styles.searchContainer}>
         <SearchBar
           value={searchQuery}
           onChangeText={setSearchQuery}
-          onFilterPress={() => setShowFilters(true)}
         />
       </View>
 
-      {/* Tabs */}
+      {/* Fixed category tabs */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.tabsWrapper}
         contentContainerStyle={styles.tabsContainer}
       >
         {TABS.map((tab) => (
@@ -67,6 +81,12 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateResort }) => {
             onPress={() => setActiveTab(tab)}
             style={[styles.tab, activeTab === tab && styles.tabActive]}
           >
+            <Ionicons
+              name={TAB_ICONS[tab] as any}
+              size={15}
+              color={activeTab === tab ? COLORS.white : COLORS.gray500}
+              style={{ marginRight: 5 }}
+            />
             <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
               {tab}
             </Text>
@@ -74,57 +94,70 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateResort }) => {
         ))}
       </ScrollView>
 
-      {/* Results Header */}
       <View style={styles.resultsHeader}>
-        <Text style={styles.resultsCount}>{filteredResorts.length} resorts found</Text>
-        <View style={styles.viewToggle}>
-          <Pressable
-            onPress={() => setViewMode('list')}
-            style={[styles.toggleButton, viewMode === 'list' && styles.toggleActive]}
-          >
-            <Ionicons name="list" size={18} color={viewMode === 'list' ? COLORS.primary : COLORS.gray400} />
-          </Pressable>
-          <Pressable
-            onPress={() => setViewMode('grid')}
-            style={[styles.toggleButton, viewMode === 'grid' && styles.toggleActive]}
-          >
-            <Ionicons name="grid" size={18} color={viewMode === 'grid' ? COLORS.primary : COLORS.gray400} />
-          </Pressable>
-        </View>
+        <Text style={styles.resultsCount}>{filteredVillas.length} villa ditemukan</Text>
       </View>
 
-      {/* Results */}
       <FlatList
-        data={filteredResorts}
+        data={filteredVillas}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-        numColumns={viewMode === 'grid' ? 2 : 1}
-        key={viewMode}
-        columnWrapperStyle={viewMode === 'grid' ? styles.gridRow : undefined}
         renderItem={({ item, index }) => (
-          <View style={viewMode === 'grid' ? styles.gridItem : undefined}>
-            <ResortCard
-              resort={item}
-              onPress={() => onNavigateResort(item)}
-              variant={viewMode === 'grid' ? 'compact' : 'large'}
-              index={index}
-            />
-          </View>
+          <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
+            <Pressable
+              style={styles.villaCard}
+              onPress={() => onNavigateVilla(item)}
+            >
+              <Image source={{ uri: item.images[0] }} style={styles.villaImage} />
+              <View style={styles.villaContent}>
+                <View style={[styles.categoryBadge, {
+                  backgroundColor: item.category === 'suite' ? COLORS.accent + '15' :
+                    item.category === 'premium' ? COLORS.primary + '15' :
+                    item.category === 'deluxe' ? COLORS.teal + '15' : COLORS.gray100,
+                }]}>
+                  <Text style={[styles.categoryText, {
+                    color: item.category === 'suite' ? COLORS.accent :
+                      item.category === 'premium' ? COLORS.primary :
+                      item.category === 'deluxe' ? COLORS.teal : COLORS.gray600,
+                  }]}>
+                    {item.category.toUpperCase()}
+                  </Text>
+                </View>
+                <Text style={styles.villaName} numberOfLines={1}>{item.name}</Text>
+                <View style={styles.villaInfo}>
+                  <View style={styles.infoItem}>
+                    <Ionicons name="bed-outline" size={14} color={COLORS.gray500} />
+                    <Text style={styles.infoText}>{item.bedrooms} Bed</Text>
+                  </View>
+                  <View style={styles.infoItem}>
+                    <Ionicons name="people-outline" size={14} color={COLORS.gray500} />
+                    <Text style={styles.infoText}>{item.maxGuests} Tamu</Text>
+                  </View>
+                  <View style={styles.infoItem}>
+                    <Ionicons name="star" size={14} color={COLORS.accent} />
+                    <Text style={styles.infoText}>{item.rating}</Text>
+                  </View>
+                </View>
+                <View style={styles.villaFooter}>
+                  <Text style={styles.villaPrice}>{formatPrice(item.pricePerNight)}</Text>
+                  <Text style={styles.villaPriceUnit}>/malam</Text>
+                </View>
+                {!item.available && (
+                  <View style={styles.unavailableBadge}>
+                    <Text style={styles.unavailableText}>Tidak Tersedia</Text>
+                  </View>
+                )}
+              </View>
+            </Pressable>
+          </Animated.View>
         )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Ionicons name="search" size={48} color={COLORS.gray300} />
-            <Text style={styles.emptyText}>No resorts found</Text>
-            <Text style={styles.emptySubtext}>Try a different search term</Text>
+            <Ionicons name="home-outline" size={48} color={COLORS.gray300} />
+            <Text style={styles.emptyText}>Tidak ada villa ditemukan</Text>
           </View>
         }
-      />
-
-      <FilterModal
-        visible={showFilters}
-        onClose={() => setShowFilters(false)}
-        onApply={(filters) => { setShowFilters(false); }}
       />
     </View>
   );
@@ -132,46 +165,81 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigateResort }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.offWhite },
-  header: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.md },
-  title: { ...TYPOGRAPHY.h1, color: COLORS.gray800 },
-  subtitle: { ...TYPOGRAPHY.bodySm, color: COLORS.gray500, marginTop: 4 },
-  searchContainer: { paddingHorizontal: SPACING.xl, marginBottom: SPACING.lg },
-  tabsContainer: { paddingHorizontal: SPACING.xl, gap: 8, marginBottom: SPACING.lg },
+  header: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.md,
+  },
+  headerLogo: { width: 44, height: 44, borderRadius: 12 },
+  title: { ...TYPOGRAPHY.h2, color: COLORS.gray800, fontSize: 22 },
+  subtitle: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
+  searchContainer: { paddingHorizontal: SPACING.xl, marginBottom: SPACING.md },
+  tabsWrapper: {
+    height: 54,
+    flexGrow: 0,
+    flexShrink: 0,
+    marginBottom: SPACING.sm,
+  },
+  tabsContainer: {
+    paddingHorizontal: SPACING.xl,
+    gap: 10,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
   tab: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
     borderRadius: RADIUS.round,
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.gray200,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabActive: {
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
-  tabText: { ...TYPOGRAPHY.buttonSm, color: COLORS.gray600 },
+  tabText: { ...TYPOGRAPHY.caption, color: COLORS.gray600, fontSize: 13 },
   tabTextActive: { color: COLORS.white },
   resultsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: SPACING.xl,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
-  resultsCount: { ...TYPOGRAPHY.bodySm, color: COLORS.gray500 },
-  viewToggle: { flexDirection: 'row', gap: 4 },
-  toggleButton: {
-    padding: 8,
-    borderRadius: RADIUS.sm,
+  resultsCount: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
+  listContainer: { paddingHorizontal: SPACING.xl, paddingBottom: 100, flexGrow: 1 },
+  villaCard: {
+    flexDirection: 'row',
     backgroundColor: COLORS.white,
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    marginBottom: SPACING.md,
+    ...SHADOWS.small,
   },
-  toggleActive: { backgroundColor: COLORS.gray50 },
-  listContainer: { paddingHorizontal: SPACING.xl, paddingBottom: 100 },
-  gridRow: { justifyContent: 'space-between' },
-  gridItem: { width: '48%' },
-  emptyState: { alignItems: 'center', paddingTop: SPACING.huge },
-  emptyText: { ...TYPOGRAPHY.h4, color: COLORS.gray400, marginTop: SPACING.lg },
-  emptySubtext: { ...TYPOGRAPHY.bodySm, color: COLORS.gray400 },
+  villaImage: { width: 120, height: 140 },
+  villaContent: { flex: 1, padding: SPACING.md, justifyContent: 'center' },
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: RADIUS.round,
+    marginBottom: 4,
+  },
+  categoryText: { fontSize: 9, fontWeight: '700', letterSpacing: 0.5 },
+  villaName: { ...TYPOGRAPHY.h4, color: COLORS.gray800, fontSize: 15, marginBottom: 4 },
+  villaInfo: { flexDirection: 'row', gap: 12, marginBottom: 6 },
+  infoItem: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  infoText: { ...TYPOGRAPHY.caption, color: COLORS.gray500, fontSize: 11 },
+  villaFooter: { flexDirection: 'row', alignItems: 'baseline' },
+  villaPrice: { ...TYPOGRAPHY.h4, color: COLORS.primary, fontSize: 15 },
+  villaPriceUnit: { ...TYPOGRAPHY.caption, color: COLORS.gray500, fontSize: 11, marginLeft: 2 },
+  unavailableBadge: {
+    position: 'absolute', top: 8, right: 8,
+    backgroundColor: COLORS.error + '15', paddingHorizontal: 6, paddingVertical: 2, borderRadius: RADIUS.round,
+  },
+  unavailableText: { fontSize: 9, fontWeight: '600', color: COLORS.error },
+  emptyState: { alignItems: 'center', paddingTop: 60 },
+  emptyText: { ...TYPOGRAPHY.body, color: COLORS.gray400, marginTop: SPACING.lg },
 });
 
 export default ExploreScreen;

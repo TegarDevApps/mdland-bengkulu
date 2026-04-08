@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   ImageBackground,
+  Image,
 } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -48,8 +49,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onNavigateL
             showsVerticalScrollIndicator={false}
           >
             <Animated.View entering={FadeInUp.delay(200).springify()} style={styles.header}>
-              <Text style={styles.title}>Create Account</Text>
-              <Text style={styles.subtitle}>Join the MDLAND luxury experience</Text>
+              <Image
+                source={require('../../assets/mdland-logo.jpeg')}
+                style={styles.logoImage}
+              />
+              <Text style={styles.title}>Buat Akun</Text>
+              <Text style={styles.subtitle}>Bergabung dengan MDLAND Bengkulu</Text>
             </Animated.View>
 
             <Animated.View entering={FadeInDown.delay(400).springify()} style={styles.form}>
@@ -97,7 +102,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onNavigateL
               </View>
 
               <AnimatedButton
-                title="Create Account"
+                title="Daftar"
                 onPress={onRegister}
                 variant="gradient"
                 size="lg"
@@ -116,9 +121,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onNavigateL
             </Animated.View>
 
             <Animated.View entering={FadeInDown.delay(600)} style={styles.footer}>
-              <Text style={styles.footerText}>Already have an account? </Text>
+              <Text style={styles.footerText}>Sudah punya akun? </Text>
               <Pressable onPress={onNavigateLogin}>
-                <Text style={styles.footerLink}>Sign In</Text>
+                <Text style={styles.footerLink}>Masuk</Text>
               </Pressable>
             </Animated.View>
           </ScrollView>
@@ -139,7 +144,14 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.huge,
   },
   header: {
+    alignItems: 'center',
     marginBottom: SPACING.xxxl,
+  },
+  logoImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 18,
+    marginBottom: SPACING.xl,
   },
   title: { ...TYPOGRAPHY.h1, color: COLORS.white, marginBottom: 8 },
   subtitle: { ...TYPOGRAPHY.body, color: COLORS.gray400 },

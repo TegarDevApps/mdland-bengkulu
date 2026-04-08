@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Resort, Villa } from '../types';
+import { Villa, Restaurant, Wahana, DiningItem } from '../types';
 
 // Screens
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import ResortDetailScreen from '../screens/ResortDetailScreen';
 import VillaDetailScreen from '../screens/VillaDetailScreen';
 import BookingScreen from '../screens/BookingScreen';
 import PaymentScreen from '../screens/PaymentScreen';
 import BookingSuccessScreen from '../screens/BookingSuccessScreen';
-import EventsScreen from '../screens/EventsScreen';
 import MapViewScreen from '../screens/MapViewScreen';
-import DiningScreen from '../screens/DiningScreen';
 import MyBookingsScreen from '../screens/MyBookingsScreen';
 import SearchScreen from '../screens/SearchScreen';
+import FnBScreen from '../screens/FnBScreen';
+import FnBOrderScreen from '../screens/FnBOrderScreen';
+import FnBCartScreen from '../screens/FnBCartScreen';
+import WahanaListScreen from '../screens/WahanaListScreen';
+import WahanaDetailScreen from '../screens/WahanaDetailScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -73,40 +75,26 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="MainTabs">
           {(props) => (
             <BottomTabNavigator
-              onNavigateResort={(resort: Resort) =>
-                props.navigation.navigate('ResortDetail', { resort })
+              onNavigateVilla={(villa: Villa) =>
+                props.navigation.navigate('VillaDetail', { villa })
               }
               onNavigateSearch={() => props.navigation.navigate('Search')}
-              onNavigateEvents={() => props.navigation.navigate('EventsFullScreen')}
+              onNavigateEvents={() => {}}
+              onNavigateFnB={() => props.navigation.navigate('FnB')}
+              onNavigateWahana={() => props.navigation.navigate('WahanaList')}
             />
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="ResortDetail" options={{ animation: 'fade_from_bottom' }}>
-          {(props: any) => (
-            <ResortDetailScreen
-              resort={props.route.params.resort}
-              onBack={() => props.navigation.goBack()}
-              onNavigateVilla={(villa: Villa) =>
-                props.navigation.navigate('VillaDetail', {
-                  villa,
-                  resortName: props.route.params.resort.name,
-                })
-              }
-            />
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen name="VillaDetail" options={{ animation: 'slide_from_right' }}>
+        <Stack.Screen name="VillaDetail" options={{ animation: 'fade_from_bottom' }}>
           {(props: any) => (
             <VillaDetailScreen
               villa={props.route.params.villa}
-              resortName={props.route.params.resortName}
+              resortName="MDLAND Bengkulu"
               onBack={() => props.navigation.goBack()}
               onBook={() =>
                 props.navigation.navigate('Booking', {
                   villa: props.route.params.villa,
-                  resortName: props.route.params.resortName,
                 })
               }
             />
@@ -117,15 +105,13 @@ const AppNavigator: React.FC = () => {
           {(props: any) => (
             <BookingScreen
               villa={props.route.params.villa}
-              resortName={props.route.params.resortName}
+              resortName="MDLAND Bengkulu"
               onBack={() => props.navigation.goBack()}
-              onProceedPayment={(checkIn, checkOut, guests, totalPrice) =>
+              onProceedPayment={(_checkIn, _checkOut, _guests, totalPrice) =>
                 props.navigation.navigate('Payment', {
-                  villa: props.route.params.villa,
-                  checkIn,
-                  checkOut,
-                  guests,
                   totalPrice,
+                  type: 'villa',
+                  itemName: props.route.params.villa.name,
                 })
               }
             />
@@ -155,9 +141,70 @@ const AppNavigator: React.FC = () => {
         </Stack.Screen>
 
         <Stack.Screen name="MapView" component={MapViewScreen} />
-        <Stack.Screen name="Dining" component={DiningScreen} />
         <Stack.Screen name="MyBookings" component={MyBookingsScreen} />
-        <Stack.Screen name="EventsFullScreen" component={EventsScreen} />
+
+        {/* F&B Flow */}
+        <Stack.Screen name="FnB" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <FnBScreen
+              onBack={() => props.navigation.goBack()}
+              onNavigateOrder={(restaurant: Restaurant) =>
+                props.navigation.navigate('FnBOrder', { restaurant })
+              }
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="FnBOrder" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <FnBOrderScreen
+              restaurant={props.route.params.restaurant}
+              onBack={() => props.navigation.goBack()}
+              onCheckout={(items, total) =>
+                props.navigation.navigate('FnBCart', { items, total })
+              }
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="FnBCart" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <FnBCartScreen
+              items={props.route.params.items}
+              total={props.route.params.total}
+              onBack={() => props.navigation.goBack()}
+              onConfirm={() => props.navigation.navigate('BookingSuccess')}
+            />
+          )}
+        </Stack.Screen>
+
+        {/* Wahana Flow */}
+        <Stack.Screen name="WahanaList" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <WahanaListScreen
+              onBack={() => props.navigation.goBack()}
+              onSelectWahana={(wahana: Wahana) =>
+                props.navigation.navigate('WahanaDetail', { wahana })
+              }
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="WahanaDetail" options={{ animation: 'fade_from_bottom' }}>
+          {(props: any) => (
+            <WahanaDetailScreen
+              wahana={props.route.params.wahana}
+              onBack={() => props.navigation.goBack()}
+              onBuyTicket={(_wahana: Wahana, _qty: number, total: number) =>
+                props.navigation.navigate('Payment', {
+                  totalPrice: total,
+                  type: 'wahana',
+                  itemName: _wahana.name,
+                })
+              }
+            />
+          )}
+        </Stack.Screen>
 
         <Stack.Screen name="Search" options={{ animation: 'fade' }}>
           {(props: any) => (

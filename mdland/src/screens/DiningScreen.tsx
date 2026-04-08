@@ -18,6 +18,15 @@ import { DiningItem } from '../types';
 import RatingStars from '../components/common/RatingStars';
 
 const CATEGORIES = ['All', 'Appetizer', 'Main', 'Dessert', 'Cocktail', 'Wine', 'Beer'];
+const CAT_ICONS: Record<string, string> = {
+  All: 'apps-outline',
+  Appetizer: 'flame-outline',
+  Main: 'restaurant-outline',
+  Dessert: 'ice-cream-outline',
+  Cocktail: 'wine-outline',
+  Wine: 'wine-outline',
+  Beer: 'beer-outline',
+};
 
 const DiningScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -96,6 +105,7 @@ const DiningScreen: React.FC = () => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.categoryWrapper}
         contentContainerStyle={styles.categoryContainer}
       >
         {CATEGORIES.map(cat => (
@@ -104,6 +114,12 @@ const DiningScreen: React.FC = () => {
             onPress={() => setActiveCategory(cat)}
             style={[styles.categoryChip, activeCategory === cat && styles.categoryChipActive]}
           >
+            <Ionicons
+              name={(CAT_ICONS[cat] || 'ellipse-outline') as any}
+              size={15}
+              color={activeCategory === cat ? COLORS.white : COLORS.gray500}
+              style={{ marginRight: 5 }}
+            />
             <Text style={[styles.categoryText, activeCategory === cat && styles.categoryTextActive]}>
               {cat}
             </Text>
@@ -151,11 +167,14 @@ const styles = StyleSheet.create({
   restaurantHours: { ...TYPOGRAPHY.caption, color: COLORS.gray400, marginTop: 4, fontSize: 11 },
 
   // Categories
-  categoryContainer: { paddingHorizontal: SPACING.xl, gap: 8, marginBottom: SPACING.lg },
+  categoryWrapper: { height: 54, flexGrow: 0, flexShrink: 0, marginBottom: SPACING.sm },
+  categoryContainer: { paddingHorizontal: SPACING.xl, gap: 10, alignItems: 'center', paddingVertical: 8 },
   categoryChip: {
-    paddingHorizontal: 16, paddingVertical: 8,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
     borderRadius: RADIUS.round,
     backgroundColor: COLORS.white, borderWidth: 1, borderColor: COLORS.gray200,
+    height: 38, justifyContent: 'center', alignItems: 'center',
   },
   categoryChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   categoryText: { ...TYPOGRAPHY.caption, color: COLORS.gray600 },

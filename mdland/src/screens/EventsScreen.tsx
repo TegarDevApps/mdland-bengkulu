@@ -16,15 +16,24 @@ import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../c
 import { EVENTS } from '../data/mockData';
 import EventCard from '../components/cards/EventCard';
 
-const GENRE_FILTER = ['All', 'Deep House', 'R&B / Soul', 'Electronic', 'Jazz', 'Acoustic', 'Wellness'];
+const GENRE_FILTER = ['Semua', 'Deep House', 'R&B', 'Electronic', 'Acoustic', 'Jazz', 'Wellness'];
+const GENRE_ICONS: Record<string, string> = {
+  Semua: 'apps-outline',
+  'Deep House': 'headset-outline',
+  'R&B': 'heart-outline',
+  Electronic: 'flash-outline',
+  Acoustic: 'musical-note-outline',
+  Jazz: 'wine-outline',
+  Wellness: 'leaf-outline',
+};
 
 const EventsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const [activeGenre, setActiveGenre] = useState('All');
+  const [activeGenre, setActiveGenre] = useState('Semua');
 
-  const filteredEvents = activeGenre === 'All'
+  const filteredEvents = activeGenre === 'Semua'
     ? EVENTS
-    : EVENTS.filter(e => e.genre.includes(activeGenre.split(' ')[0]));
+    : EVENTS.filter(e => e.genre.toLowerCase().includes(activeGenre.toLowerCase()));
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -48,6 +57,7 @@ const EventsScreen: React.FC = () => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.genreWrapper}
         contentContainerStyle={styles.genreContainer}
       >
         {GENRE_FILTER.map(genre => (
@@ -56,6 +66,12 @@ const EventsScreen: React.FC = () => {
             onPress={() => setActiveGenre(genre)}
             style={[styles.genreChip, activeGenre === genre && styles.genreChipActive]}
           >
+            <Ionicons
+              name={GENRE_ICONS[genre] as any}
+              size={15}
+              color={activeGenre === genre ? COLORS.white : COLORS.gray500}
+              style={{ marginRight: 5 }}
+            />
             <Text style={[styles.genreText, activeGenre === genre && styles.genreTextActive]}>
               {genre}
             </Text>
@@ -107,16 +123,31 @@ const styles = StyleSheet.create({
   heroOverline: { ...TYPOGRAPHY.overline, color: COLORS.accentWarm, fontSize: 11, marginBottom: 4 },
   heroTitle: { ...TYPOGRAPHY.h1, color: COLORS.white },
   heroSubtitle: { ...TYPOGRAPHY.body, color: COLORS.gray300, marginTop: 4 },
-  genreContainer: { paddingHorizontal: SPACING.xl, paddingVertical: SPACING.lg, gap: 8 },
+  genreWrapper: {
+    height: 54,
+    flexGrow: 0,
+    flexShrink: 0,
+    marginBottom: SPACING.sm,
+  },
+  genreContainer: {
+    paddingHorizontal: SPACING.xl,
+    gap: 10,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
   genreChip: {
-    paddingHorizontal: 16, paddingVertical: 8,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
     borderRadius: RADIUS.round, backgroundColor: COLORS.white,
     borderWidth: 1, borderColor: COLORS.gray200,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   genreChipActive: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
-  genreText: { ...TYPOGRAPHY.caption, color: COLORS.gray600 },
+  genreText: { ...TYPOGRAPHY.caption, color: COLORS.gray600, fontSize: 13 },
   genreTextActive: { color: COLORS.white },
-  eventsList: { paddingHorizontal: SPACING.xl, paddingBottom: 100 },
+  eventsList: { paddingHorizontal: SPACING.xl, paddingBottom: 100, flexGrow: 1 },
   emptyState: { alignItems: 'center', paddingTop: SPACING.huge },
   emptyText: { ...TYPOGRAPHY.body, color: COLORS.gray400, marginTop: SPACING.lg },
 });
