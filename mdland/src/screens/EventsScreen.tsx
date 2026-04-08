@@ -16,22 +16,23 @@ import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../c
 import { EVENTS } from '../data/mockData';
 import EventCard from '../components/cards/EventCard';
 
-const GENRE_FILTER = ['Semua', 'Deep House', 'R&B', 'Electronic', 'Acoustic', 'Jazz', 'Wellness'];
+const GENRE_FILTER = ['Semua', 'Open Trip', 'Chill & Relax', 'Music & Nightlife', 'Food & Beverage', 'Sport & Activity', 'Couple & Private'];
 const GENRE_ICONS: Record<string, string> = {
   Semua: 'apps-outline',
-  'Deep House': 'headset-outline',
-  'R&B': 'heart-outline',
-  Electronic: 'flash-outline',
-  Acoustic: 'musical-note-outline',
-  Jazz: 'wine-outline',
-  Wellness: 'leaf-outline',
+  'Open Trip': 'boat-outline',
+  'Chill & Relax': 'leaf-outline',
+  'Music & Nightlife': 'musical-notes-outline',
+  'Food & Beverage': 'restaurant-outline',
+  'Sport & Activity': 'barbell-outline',
+  'Couple & Private': 'heart-outline',
 };
 
 interface EventsScreenProps {
   onNavigateEvent?: (event: any) => void;
+  onBack?: () => void;
 }
 
-const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent }) => {
+const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent, onBack }) => {
   const insets = useSafeAreaInsets();
   const [activeGenre, setActiveGenre] = useState('Semua');
 
@@ -49,10 +50,15 @@ const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent }) => {
         style={styles.hero}
       >
         <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.heroGradient}>
+          {onBack && (
+            <Pressable onPress={onBack} style={styles.backButton}>
+              <Ionicons name="chevron-back" size={22} color={COLORS.white} />
+            </Pressable>
+          )}
           <Animated.View entering={FadeInDown.springify()}>
             <Text style={styles.heroOverline}>BEACH CLUB</Text>
             <Text style={styles.heroTitle}>Events &{'\n'}Experiences</Text>
-            <Text style={styles.heroSubtitle}>Music · R&B · Chill Vibes</Text>
+            <Text style={styles.heroSubtitle}>Open Trip · Music · Chill · F&B · Sport · Private</Text>
           </Animated.View>
         </LinearGradient>
       </ImageBackground>
@@ -124,6 +130,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.offWhite },
   hero: { height: 220 },
   heroGradient: { flex: 1, justifyContent: 'flex-end', padding: SPACING.xl },
+  backButton: {
+    position: 'absolute', top: 12, left: 16,
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center', justifyContent: 'center',
+  },
   heroOverline: { ...TYPOGRAPHY.overline, color: COLORS.accentWarm, fontSize: 11, marginBottom: 4 },
   heroTitle: { ...TYPOGRAPHY.h1, color: COLORS.white },
   heroSubtitle: { ...TYPOGRAPHY.body, color: COLORS.gray300, marginTop: 4 },

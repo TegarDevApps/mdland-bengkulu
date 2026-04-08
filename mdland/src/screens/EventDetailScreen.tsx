@@ -34,9 +34,10 @@ interface EventDetailScreenProps {
   event: Event;
   onBack: () => void;
   onBuyTicket: (event: Event, qty: number, total: number) => void;
+  onChat?: () => void;
 }
 
-const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, onBuyTicket }) => {
+const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, onBuyTicket, onChat }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const [activeTab, setActiveTab] = useState(0);
@@ -91,7 +92,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
         contentContainerStyle={{ paddingBottom: 130 }}
       >
         {/* Hero Image */}
-        <Image source={{ uri: event.image }} style={styles.heroImage} />
+        <Image source={typeof event.image === 'number' ? event.image : { uri: event.image }} style={styles.heroImage} />
 
         {/* Content Card */}
         <View style={styles.contentCard}>
@@ -168,7 +169,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
                     {similarEvents.map((se, index) => (
                       <Animated.View key={se.id} entering={FadeInDown.delay(index * 60).springify()}>
                         <View style={styles.similarCard}>
-                          <Image source={{ uri: se.image }} style={styles.similarImage} />
+                          <Image source={typeof se.image === 'number' ? se.image : { uri: se.image }} style={styles.similarImage} />
                           <View style={styles.similarInfo}>
                             <Text style={styles.similarName} numberOfLines={1}>{se.title}</Text>
                             <View style={styles.similarMeta}>
@@ -319,13 +320,13 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
               <View style={styles.galleryGrid}>
                 <Animated.View entering={FadeInDown.delay(0).springify()}>
                   <Pressable onPress={() => { setGalleryIndex(0); setGalleryVisible(true); }}>
-                    <Image source={{ uri: event.image }} style={styles.galleryHero} />
+                    <Image source={typeof event.image === 'number' ? event.image : { uri: event.image }} style={styles.galleryHero} />
                   </Pressable>
                 </Animated.View>
                 {[event.image, event.image].map((img, i) => (
                   <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
                     <Pressable onPress={() => { setGalleryIndex(i + 1); setGalleryVisible(true); }}>
-                      <Image source={{ uri: img }} style={styles.galleryThumb} />
+                      <Image source={typeof img === 'number' ? img : { uri: img }} style={styles.galleryThumb} />
                     </Pressable>
                   </Animated.View>
                 ))}
@@ -350,7 +351,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
             showsHorizontalScrollIndicator={false}
             keyExtractor={(_, i) => i.toString()}
             renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.modalImage} resizeMode="contain" />
+              <Image source={typeof item === 'number' ? item : { uri: item }} style={styles.modalImage} resizeMode="contain" />
             )}
           />
         </View>
@@ -362,6 +363,10 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
           <Text style={styles.bottomLabel}>Mulai dari</Text>
           <Text style={styles.bottomTotal}>{formatPrice(event.price)}</Text>
         </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <Pressable onPress={onChat} style={styles.chatFloatBtn}>
+          <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
+        </Pressable>
         <Pressable
           onPress={() => onBuyTicket(event, ticketQty, Math.round(total * 1.05))}
           style={styles.buyButton}
@@ -375,6 +380,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
             <Text style={styles.buyText}>Beli Tiket</Text>
           </LinearGradient>
         </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -512,6 +518,11 @@ const styles = StyleSheet.create({
   },
   bottomLabel: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
   bottomTotal: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
+  chatFloatBtn: {
+    width: 46, height: 46, borderRadius: 16,
+    backgroundColor: COLORS.primary + '10', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: COLORS.primary + '20',
+  },
   buyButton: { borderRadius: RADIUS.xl, overflow: 'hidden' },
   buyGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
   buyText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },

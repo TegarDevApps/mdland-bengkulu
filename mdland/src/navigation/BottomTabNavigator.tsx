@@ -49,6 +49,19 @@ interface BottomTabNavigatorProps {
   onNavigateEvent: (event: any) => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
+  onNavigateMap: () => void;
+  onNavigateRestaurant?: (restaurant: any) => void;
+  onNavigateWahanaDetail?: (wahana: any) => void;
+  onNavigateEvents: () => void;
+  onNavigatePersonalInfo?: () => void;
+  onNavigatePaymentHistory?: () => void;
+  onNavigateNotifications?: () => void;
+  onNavigateChat?: () => void;
+  onNavigatePrivacy?: () => void;
+  onNavigateLanguage?: () => void;
+  onNavigateHelp?: () => void;
+  onNavigateTerms?: () => void;
+  onSignOut?: () => void;
 }
 
 const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
@@ -57,6 +70,19 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   onNavigateEvent,
   onNavigateFnB,
   onNavigateWahana,
+  onNavigateMap,
+  onNavigateRestaurant,
+  onNavigateWahanaDetail,
+  onNavigateEvents,
+  onNavigatePersonalInfo,
+  onNavigatePaymentHistory,
+  onNavigateNotifications,
+  onNavigateChat,
+  onNavigatePrivacy,
+  onNavigateLanguage,
+  onNavigateHelp,
+  onNavigateTerms,
+  onSignOut,
 }) => {
   return (
     <Tab.Navigator
@@ -81,11 +107,14 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           <HomeScreen
             onNavigateVilla={onNavigateVilla}
             onNavigateExplore={() => {}}
-            onNavigateEvents={() => {}}
+            onNavigateEvents={onNavigateEvents}
             onNavigateEvent={onNavigateEvent}
             onNavigateSearch={onNavigateSearch}
             onNavigateFnB={onNavigateFnB}
             onNavigateWahana={onNavigateWahana}
+            onNavigateMap={onNavigateMap}
+            onNavigateNotifications={onNavigateNotifications}
+            onNavigateChat={onNavigateChat}
           />
         )}
       </Tab.Screen>
@@ -98,7 +127,11 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           ),
         }}
       >
-        {() => <ExploreScreen onNavigateVilla={onNavigateVilla} />}
+        {() => (
+          <ExploreScreen
+            onNavigateVilla={onNavigateVilla}
+          />
+        )}
       </Tab.Screen>
 
       <Tab.Screen
@@ -109,7 +142,11 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           ),
         }}
       >
-        {() => <EventsScreen onNavigateEvent={onNavigateEvent} />}
+        {() => (
+          <EventsScreen
+            onNavigateEvent={onNavigateEvent}
+          />
+        )}
       </Tab.Screen>
 
       <Tab.Screen
@@ -124,13 +161,26 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
 
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon name={focused ? 'person' : 'person-outline'} focused={focused} color={color} size={size} />
           ),
         }}
-      />
+      >
+        {() => (
+          <ProfileScreen
+            onNavigatePersonalInfo={onNavigatePersonalInfo}
+            onNavigatePaymentHistory={onNavigatePaymentHistory}
+            onNavigateNotifications={onNavigateNotifications}
+            onNavigateChat={onNavigateChat}
+            onNavigatePrivacy={onNavigatePrivacy}
+            onNavigateLanguage={onNavigateLanguage}
+            onNavigateHelp={onNavigateHelp}
+            onNavigateTerms={onNavigateTerms}
+            onSignOut={onSignOut}
+          />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };

@@ -35,6 +35,9 @@ interface HomeScreenProps {
   onNavigateSearch: () => void;
   onNavigateFnB: () => void;
   onNavigateWahana: () => void;
+  onNavigateMap?: () => void;
+  onNavigateNotifications?: () => void;
+  onNavigateChat?: () => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -45,6 +48,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateSearch,
   onNavigateFnB,
   onNavigateWahana,
+  onNavigateMap,
+  onNavigateNotifications,
+  onNavigateChat,
 }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
@@ -73,7 +79,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     { icon: 'restaurant', label: 'F&B', color: COLORS.accent, onPress: onNavigateFnB },
     { icon: 'boat', label: 'Wahana', color: COLORS.teal, onPress: onNavigateWahana },
     { icon: 'musical-notes', label: 'Events', color: COLORS.coral, onPress: onNavigateEvents },
-    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: () => {} },
+    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: onNavigateMap || (() => {}) },
   ];
 
   const formatPrice = (price: number) => 'Rp ' + price.toLocaleString('id-ID');
@@ -98,7 +104,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
           <Pressable onPress={onNavigateSearch} style={styles.headerIcon}>
             <Ionicons name="search" size={22} color={COLORS.gray700} />
           </Pressable>
-          <Pressable style={styles.headerIcon}>
+          <Pressable onPress={onNavigateChat} style={styles.headerIcon}>
+            <Ionicons name="chatbubble-ellipses-outline" size={22} color={COLORS.gray700} />
+          </Pressable>
+          <Pressable onPress={onNavigateNotifications} style={styles.headerIcon}>
             <Ionicons name="notifications-outline" size={22} color={COLORS.gray700} />
             <View style={styles.notifDot} />
           </Pressable>
@@ -133,15 +142,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Categories */}
         <Animated.View entering={FadeInDown.delay(200).springify()}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoriesContainer}
-          >
+          <View style={styles.categoriesContainer}>
             {categories.map((cat, index) => (
               <Animated.View
                 key={cat.label}
                 entering={FadeInRight.delay(200 + index * 80).springify()}
+                style={styles.categoryWrapper}
               >
                 <Pressable style={styles.categoryItem} onPress={cat.onPress}>
                   <View style={[styles.categoryIcon, { backgroundColor: cat.color + '15' }]}>
@@ -151,7 +157,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
                 </Pressable>
               </Animated.View>
             ))}
-          </ScrollView>
+          </View>
         </Animated.View>
 
         {/* Popular Villas */}
@@ -315,7 +321,8 @@ const styles = StyleSheet.create({
   },
   heroButtonText: { ...TYPOGRAPHY.buttonSm, color: COLORS.primary },
   heroLogo: { width: 80, height: 80, borderRadius: 16, opacity: 0.3, alignSelf: 'center' },
-  categoriesContainer: { paddingHorizontal: SPACING.xl, gap: 16, marginBottom: SPACING.xxl },
+  categoriesContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: SPACING.xl, marginBottom: SPACING.xxl },
+  categoryWrapper: { flex: 1, alignItems: 'center' },
   categoryItem: { alignItems: 'center', gap: 8 },
   categoryIcon: { width: 56, height: 56, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   categoryLabel: { ...TYPOGRAPHY.caption, color: COLORS.gray600 },

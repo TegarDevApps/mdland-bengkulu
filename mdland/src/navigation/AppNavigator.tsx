@@ -21,6 +21,16 @@ import FnBCartScreen from '../screens/FnBCartScreen';
 import WahanaListScreen from '../screens/WahanaListScreen';
 import WahanaDetailScreen from '../screens/WahanaDetailScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import EventsScreen from '../screens/EventsScreen';
+import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import PaymentHistoryScreen from '../screens/PaymentHistoryScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
+import ChatListScreen from '../screens/ChatListScreen';
+import ChatRoomScreen from '../screens/ChatRoomScreen';
+import PrivacySecurityScreen from '../screens/PrivacySecurityScreen';
+import LanguageRegionScreen from '../screens/LanguageRegionScreen';
+import HelpSupportScreen from '../screens/HelpSupportScreen';
+import TermsPoliciesScreen from '../screens/TermsPoliciesScreen';
 
 // Navigation
 import BottomTabNavigator from './BottomTabNavigator';
@@ -85,6 +95,23 @@ const AppNavigator: React.FC = () => {
               }
               onNavigateFnB={() => props.navigation.navigate('FnB')}
               onNavigateWahana={() => props.navigation.navigate('WahanaList')}
+              onNavigateMap={() => props.navigation.navigate('MapView')}
+              onNavigateEvents={() => props.navigation.navigate('Events')}
+              onNavigateRestaurant={(restaurant: Restaurant) =>
+                props.navigation.navigate('FnBOrder', { restaurant })
+              }
+              onNavigateWahanaDetail={(wahana: Wahana) =>
+                props.navigation.navigate('WahanaDetail', { wahana })
+              }
+              onNavigatePersonalInfo={() => props.navigation.navigate('PersonalInfo')}
+              onNavigatePaymentHistory={() => props.navigation.navigate('PaymentHistory')}
+              onNavigateNotifications={() => props.navigation.navigate('Notifications')}
+              onNavigateChat={() => props.navigation.navigate('ChatList')}
+              onNavigatePrivacy={() => props.navigation.navigate('Privacy')}
+              onNavigateLanguage={() => props.navigation.navigate('Language')}
+              onNavigateHelp={() => props.navigation.navigate('Help')}
+              onNavigateTerms={() => props.navigation.navigate('Terms')}
+              onSignOut={() => setIsAuthenticated(false)}
             />
           )}
         </Stack.Screen>
@@ -98,6 +125,21 @@ const AppNavigator: React.FC = () => {
               onBook={() =>
                 props.navigation.navigate('Booking', {
                   villa: props.route.params.villa,
+                })
+              }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `villa-${props.route.params.villa.id}`,
+                    name: props.route.params.villa.name,
+                    avatar: props.route.params.villa.images[0],
+                    role: 'Villa Host',
+                    category: 'villa',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
                 })
               }
             />
@@ -143,8 +185,31 @@ const AppNavigator: React.FC = () => {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="MapView" component={MapViewScreen} />
+        <Stack.Screen name="MapView" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <MapViewScreen
+              onBack={() => props.navigation.goBack()}
+              onSearch={() => props.navigation.navigate('Search')}
+              onNavigateVilla={(villa: Villa) => props.navigation.navigate('VillaDetail', { villa })}
+              onNavigateRestaurant={(restaurant: Restaurant) => props.navigation.navigate('FnBOrder', { restaurant })}
+              onNavigateWahana={(wahana: Wahana) => props.navigation.navigate('WahanaDetail', { wahana })}
+              onNavigateEvent={(event: Event) => props.navigation.navigate('EventDetail', { event })}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="MyBookings" component={MyBookingsScreen} />
+
+        {/* Events Flow */}
+        <Stack.Screen name="Events" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <EventsScreen
+              onBack={() => props.navigation.goBack()}
+              onNavigateEvent={(event: Event) =>
+                props.navigation.navigate('EventDetail', { event })
+              }
+            />
+          )}
+        </Stack.Screen>
 
         {/* F&B Flow */}
         <Stack.Screen name="FnB" options={{ animation: 'slide_from_right' }}>
@@ -165,6 +230,21 @@ const AppNavigator: React.FC = () => {
               onBack={() => props.navigation.goBack()}
               onCheckout={(items, total) =>
                 props.navigation.navigate('FnBCart', { items, total })
+              }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `resto-${props.route.params.restaurant.id}`,
+                    name: props.route.params.restaurant.name,
+                    avatar: props.route.params.restaurant.image,
+                    role: 'Restaurant Manager',
+                    category: 'restaurant',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
               }
             />
           )}
@@ -205,6 +285,21 @@ const AppNavigator: React.FC = () => {
                   itemName: _wahana.name,
                 })
               }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `wahana-${props.route.params.wahana.id}`,
+                    name: props.route.params.wahana.name,
+                    avatar: props.route.params.wahana.image,
+                    role: 'Wahana Operator',
+                    category: 'wahana',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
+              }
             />
           )}
         </Stack.Screen>
@@ -228,7 +323,87 @@ const AppNavigator: React.FC = () => {
                   itemName: _event.title,
                 })
               }
+              onChat={() =>
+                props.navigation.navigate('ChatRoom', {
+                  contact: {
+                    id: `event-${props.route.params.event.id}`,
+                    name: props.route.params.event.title,
+                    avatar: props.route.params.event.image,
+                    role: 'Event Organizer',
+                    category: 'event',
+                    lastMessage: '',
+                    lastTime: '',
+                    unread: 0,
+                    online: true,
+                  },
+                })
+              }
             />
+          )}
+        </Stack.Screen>
+
+        {/* Profile Sub-Screens */}
+        <Stack.Screen name="PersonalInfo" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PersonalInfoScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="PaymentHistory" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PaymentHistoryScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Notifications" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <NotificationsScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        {/* Chat Flow */}
+        <Stack.Screen name="ChatList" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <ChatListScreen
+              onBack={() => props.navigation.goBack()}
+              onOpenChat={(contact) =>
+                props.navigation.navigate('ChatRoom', { contact })
+              }
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="ChatRoom" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <ChatRoomScreen
+              contact={props.route.params.contact}
+              onBack={() => props.navigation.goBack()}
+            />
+          )}
+        </Stack.Screen>
+
+        {/* Settings Sub-Screens */}
+        <Stack.Screen name="Privacy" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <PrivacySecurityScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Language" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <LanguageRegionScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Help" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <HelpSupportScreen onBack={() => props.navigation.goBack()} />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="Terms" options={{ animation: 'slide_from_right' }}>
+          {(props: any) => (
+            <TermsPoliciesScreen onBack={() => props.navigation.goBack()} />
           )}
         </Stack.Screen>
       </Stack.Navigator>

@@ -50,6 +50,7 @@ interface VillaDetailScreenProps {
   resortName: string;
   onBack: () => void;
   onBook: () => void;
+  onChat?: () => void;
 }
 
 /* ── Image Carousel Dot ─────────────────────────── */
@@ -62,7 +63,7 @@ const CarouselDot: React.FC<{ index: number; scrollX: SharedValue<number> }> = (
   return <Animated.View style={[styles.dot, style]} />;
 };
 
-const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName, onBack, onBook }) => {
+const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName, onBack, onBook, onChat }) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const carouselScrollX = useSharedValue(0);
@@ -383,12 +384,17 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
           <Text style={styles.bottomPrice}>{formatPrice(villa.pricePerNight)}</Text>
           <Text style={styles.bottomUnit}>/ malam · termasuk pajak</Text>
         </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <Pressable onPress={onChat} style={styles.chatFloatBtn}>
+          <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
+        </Pressable>
         <Pressable onPress={onBook} disabled={!villa.available} style={[styles.bookBtn, !villa.available && { opacity: 0.5 }]}>
           <LinearGradient colors={COLORS.gradientOcean as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.bookGradient}>
             <Text style={styles.bookText}>{villa.available ? 'Pesan Sekarang' : 'Sold Out'}</Text>
             <Ionicons name="arrow-forward" size={18} color={COLORS.white} />
           </LinearGradient>
         </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -533,6 +539,11 @@ const styles = StyleSheet.create({
   },
   bottomPrice: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
   bottomUnit: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2 },
+  chatFloatBtn: {
+    width: 46, height: 46, borderRadius: 16,
+    backgroundColor: COLORS.primary + '10', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: COLORS.primary + '20',
+  },
   bookBtn: { borderRadius: RADIUS.xl, overflow: 'hidden' },
   bookGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
   bookText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },

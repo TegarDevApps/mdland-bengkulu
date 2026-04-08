@@ -31,7 +31,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  image: string;
+  image: string | number;
   date: string;
   time: string;
   location: string;
@@ -101,8 +101,14 @@ export interface MapMarker {
   title: string;
   description: string;
   coordinate: { latitude: number; longitude: number };
-  type: 'villa' | 'restaurant' | 'event' | 'wahana';
+  type: 'villa' | 'restaurant' | 'event' | 'wahana' | 'facility';
   image: string;
+  rating?: number;
+  reviewCount?: number;
+  price?: number;
+  category?: string;
+  waitTime?: number;
+  isOpen?: boolean;
 }
 
 export interface Resort {
@@ -141,4 +147,13 @@ export type RootStackParamList = {
   Profile: undefined;
   MyBookings: undefined;
   Search: undefined;
+  PersonalInfo: undefined;
+  PaymentHistory: undefined;
+  Notifications: undefined;
+  Privacy: undefined;
+  Language: undefined;
+  Help: undefined;
+  Terms: undefined;
+  ChatList: undefined;
+  ChatRoom: { contact: any };
 };
