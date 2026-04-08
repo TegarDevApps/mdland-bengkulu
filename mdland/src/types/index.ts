@@ -31,7 +31,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  image: string;
+  image: string | number;
   date: string;
   time: string;
   location: string;

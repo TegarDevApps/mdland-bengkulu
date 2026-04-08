@@ -16,15 +16,15 @@ import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, SCREEN_WIDTH } from '../c
 import { EVENTS } from '../data/mockData';
 import EventCard from '../components/cards/EventCard';
 
-const GENRE_FILTER = ['Semua', 'Deep House', 'R&B', 'Electronic', 'Acoustic', 'Jazz', 'Wellness'];
+const GENRE_FILTER = ['Semua', 'Open Trip', 'Chill & Relax', 'Music & Nightlife', 'Food & Beverage', 'Sport & Activity', 'Couple & Private'];
 const GENRE_ICONS: Record<string, string> = {
   Semua: 'apps-outline',
-  'Deep House': 'headset-outline',
-  'R&B': 'heart-outline',
-  Electronic: 'flash-outline',
-  Acoustic: 'musical-note-outline',
-  Jazz: 'wine-outline',
-  Wellness: 'leaf-outline',
+  'Open Trip': 'boat-outline',
+  'Chill & Relax': 'leaf-outline',
+  'Music & Nightlife': 'musical-notes-outline',
+  'Food & Beverage': 'restaurant-outline',
+  'Sport & Activity': 'barbell-outline',
+  'Couple & Private': 'heart-outline',
 };
 
 interface EventsScreenProps {
@@ -58,7 +58,7 @@ const EventsScreen: React.FC<EventsScreenProps> = ({ onNavigateEvent, onBack }) 
           <Animated.View entering={FadeInDown.springify()}>
             <Text style={styles.heroOverline}>BEACH CLUB</Text>
             <Text style={styles.heroTitle}>Events &{'\n'}Experiences</Text>
-            <Text style={styles.heroSubtitle}>Music · R&B · Chill Vibes</Text>
+            <Text style={styles.heroSubtitle}>Open Trip · Music · Chill · F&B · Sport · Private</Text>
           </Animated.View>
         </LinearGradient>
       </ImageBackground>

@@ -92,7 +92,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
         contentContainerStyle={{ paddingBottom: 130 }}
       >
         {/* Hero Image */}
-        <Image source={{ uri: event.image }} style={styles.heroImage} />
+        <Image source={typeof event.image === 'number' ? event.image : { uri: event.image }} style={styles.heroImage} />
 
         {/* Content Card */}
         <View style={styles.contentCard}>
@@ -169,7 +169,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
                     {similarEvents.map((se, index) => (
                       <Animated.View key={se.id} entering={FadeInDown.delay(index * 60).springify()}>
                         <View style={styles.similarCard}>
-                          <Image source={{ uri: se.image }} style={styles.similarImage} />
+                          <Image source={typeof se.image === 'number' ? se.image : { uri: se.image }} style={styles.similarImage} />
                           <View style={styles.similarInfo}>
                             <Text style={styles.similarName} numberOfLines={1}>{se.title}</Text>
                             <View style={styles.similarMeta}>
@@ -320,13 +320,13 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
               <View style={styles.galleryGrid}>
                 <Animated.View entering={FadeInDown.delay(0).springify()}>
                   <Pressable onPress={() => { setGalleryIndex(0); setGalleryVisible(true); }}>
-                    <Image source={{ uri: event.image }} style={styles.galleryHero} />
+                    <Image source={typeof event.image === 'number' ? event.image : { uri: event.image }} style={styles.galleryHero} />
                   </Pressable>
                 </Animated.View>
                 {[event.image, event.image].map((img, i) => (
                   <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
                     <Pressable onPress={() => { setGalleryIndex(i + 1); setGalleryVisible(true); }}>
-                      <Image source={{ uri: img }} style={styles.galleryThumb} />
+                      <Image source={typeof img === 'number' ? img : { uri: img }} style={styles.galleryThumb} />
                     </Pressable>
                   </Animated.View>
                 ))}
@@ -351,7 +351,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ event, onBack, on
             showsHorizontalScrollIndicator={false}
             keyExtractor={(_, i) => i.toString()}
             renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.modalImage} resizeMode="contain" />
+              <Image source={typeof item === 'number' ? item : { uri: item }} style={styles.modalImage} resizeMode="contain" />
             )}
           />
         </View>

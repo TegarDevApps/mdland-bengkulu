@@ -47,7 +47,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         style={[styles.horizontalCard, animatedStyle, SHADOWS.small]}
       >
         <ImageBackground
-          source={{ uri: event.image }}
+          source={typeof event.image === 'number' ? event.image : { uri: event.image }}
           style={styles.horizontalImage}
           imageStyle={{ borderRadius: RADIUS.lg }}
         >
@@ -86,7 +86,7 @@ export const EventCard: React.FC<EventCardProps> = ({
       onPressOut={() => { scale.value = withSpring(1); }}
       style={[styles.fullCard, animatedStyle, SHADOWS.medium]}
     >
-      <ImageBackground source={{ uri: event.image }} style={styles.fullImage} imageStyle={{ borderRadius: RADIUS.xxl }}>
+      <ImageBackground source={typeof event.image === 'number' ? event.image : { uri: event.image }} style={styles.fullImage} imageStyle={{ borderRadius: RADIUS.xxl }}>
         <LinearGradient colors={COLORS.gradientDarkReverse as any} style={styles.fullGradient}>
           <View style={styles.dateBadge}>
             <Text style={styles.dateBadgeDayLg}>{new Date(event.date).getDate()}</Text>
