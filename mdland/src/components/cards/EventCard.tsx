@@ -67,7 +67,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             <Ionicons name="time-outline" size={12} color={COLORS.gray500} /> {event.time}
           </Text>
           <View style={styles.horizontalFooter}>
-            <Text style={styles.horizontalPrice}>${event.price}</Text>
+            <Text style={styles.horizontalPrice}>Rp {event.price.toLocaleString('id-ID')}</Text>
             <View style={styles.attendingBadge}>
               <Ionicons name="people" size={12} color={COLORS.primary} />
               <Text style={styles.attendingText}>{event.attending}</Text>
@@ -108,7 +108,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                 <Ionicons name="time-outline" size={14} color={COLORS.gray300} />
                 <Text style={styles.fullDetailText}>{event.time}</Text>
               </View>
-              <Text style={styles.fullPrice}>${event.price}</Text>
+              <Text style={styles.fullPrice}>Rp {event.price.toLocaleString('id-ID')}</Text>
             </View>
           </View>
         </LinearGradient>

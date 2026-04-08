@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet, View, Text, ScrollView, Pressable, Image,
+  StyleSheet, View, Text, ScrollView, Pressable, Image, FlatList, Modal,
 } from 'react-native';
 import Animated, {
   FadeInDown, FadeIn,
@@ -21,8 +21,8 @@ const TABS: { label: string; icon: string }[] = [
   { label: 'Overview', icon: 'compass-outline' },
   { label: 'Info', icon: 'list-outline' },
   { label: 'Tiket', icon: 'ticket-outline' },
-  { label: 'Gallery', icon: 'images-outline' },
   { label: 'Review', icon: 'chatbubble-ellipses-outline' },
+  { label: 'Gallery', icon: 'images-outline' },
 ];
 const MOCK_REVIEWS = [
   { id: '1', name: 'Reza Pratama', avatar: 'https://i.pravatar.cc/100?img=14', rating: 5, date: '1 minggu lalu', text: 'Wahana seru banget! Anak-anak sangat menikmati. Staff ramah dan sigap.' },
@@ -42,6 +42,8 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
   const [activeTab, setActiveTab] = useState(0);
   const [liked, setLiked] = useState(false);
   const [ticketQty, setTicketQty] = useState(1);
+  const [galleryVisible, setGalleryVisible] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const total = wahana.price * ticketQty;
 
   const scrollHandler = useAnimatedScrollHandler({ onScroll: e => { scrollY.value = e.contentOffset.y; } });
@@ -253,25 +255,8 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
             </Animated.View>
           )}
 
-          {/* Gallery Tab */}
-          {activeTab === 3 && (
-            <Animated.View entering={FadeIn.duration(250)}>
-              <Text style={styles.sectionTitle}>Foto Wahana</Text>
-              <View style={styles.galleryGrid}>
-                <Animated.View entering={FadeInDown.delay(0).springify()}>
-                  <Image source={{ uri: wahana.image }} style={styles.galleryHero} />
-                </Animated.View>
-                {[wahana.image, wahana.image].map((img, i) => (
-                  <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
-                    <Image source={{ uri: img }} style={styles.galleryThumb} />
-                  </Animated.View>
-                ))}
-              </View>
-            </Animated.View>
-          )}
-
           {/* Review Tab */}
-          {activeTab === 4 && (
+          {activeTab === 3 && (
             <Animated.View entering={FadeIn.duration(250)}>
               <View style={styles.reviewHeader}>
                 <Text style={styles.sectionTitle}>Ulasan Pengunjung</Text>
@@ -300,8 +285,50 @@ const WahanaDetailScreen: React.FC<WahanaDetailScreenProps> = ({ wahana, onBack,
               ))}
             </Animated.View>
           )}
+
+          {/* Gallery Tab */}
+          {activeTab === 4 && (
+            <Animated.View entering={FadeIn.duration(250)}>
+              <Text style={styles.sectionTitle}>Foto Wahana</Text>
+              <View style={styles.galleryGrid}>
+                <Animated.View entering={FadeInDown.delay(0).springify()}>
+                  <Pressable onPress={() => { setGalleryIndex(0); setGalleryVisible(true); }}>
+                    <Image source={{ uri: wahana.image }} style={styles.galleryHero} />
+                  </Pressable>
+                </Animated.View>
+                {[wahana.image, wahana.image].map((img, i) => (
+                  <Animated.View key={i} entering={FadeInDown.delay((i + 1) * 80).springify()}>
+                    <Pressable onPress={() => { setGalleryIndex(i + 1); setGalleryVisible(true); }}>
+                      <Image source={{ uri: img }} style={styles.galleryThumb} />
+                    </Pressable>
+                  </Animated.View>
+                ))}
+              </View>
+            </Animated.View>
+          )}
         </View>
       </Animated.ScrollView>
+
+      {/* Fullscreen Gallery Modal */}
+      <Modal visible={galleryVisible} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setGalleryVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <Pressable style={styles.modalClose} onPress={() => setGalleryVisible(false)}>
+            <Ionicons name="close" size={28} color={COLORS.white} />
+          </Pressable>
+          <FlatList
+            data={[wahana.image, wahana.image, wahana.image]}
+            horizontal
+            pagingEnabled
+            initialScrollIndex={galleryIndex}
+            getItemLayout={(_, index) => ({ length: SCREEN_WIDTH, offset: SCREEN_WIDTH * index, index })}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={({ item }) => (
+              <Image source={{ uri: item }} style={styles.modalImage} resizeMode="contain" />
+            )}
+          />
+        </View>
+      </Modal>
 
       {/* Bottom CTA */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 12 }]}>
@@ -460,6 +487,9 @@ const styles = StyleSheet.create({
   buyButton: { borderRadius: RADIUS.xl, overflow: 'hidden' },
   buyGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
   buyText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' },
+  modalClose: { position: 'absolute', top: 50, right: 20, zIndex: 10, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  modalImage: { width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2 },
 });
 
 export default WahanaDetailScreen;

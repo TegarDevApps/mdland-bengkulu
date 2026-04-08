@@ -69,7 +69,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   const sizeStyles = {
     sm: { paddingVertical: 10, paddingHorizontal: 16 },
     md: { paddingVertical: 14, paddingHorizontal: 24 },
-    lg: { paddingVertical: 18, paddingHorizontal: 32 },
+    lg: { paddingVertical: 14, paddingHorizontal: 24 },
   };
 
   const variantStyles: Record<string, ViewStyle> = {

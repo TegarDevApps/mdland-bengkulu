@@ -33,6 +33,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const [selectedMethod, setSelectedMethod] = useState('card');
+  const formatPrice = (p: number) => 'Rp ' + p.toLocaleString('id-ID');
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -59,19 +60,19 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal</Text>
-            <Text style={styles.summaryValue}>${Math.round(totalPrice * 0.82)}</Text>
+            <Text style={styles.summaryValue}>{formatPrice(Math.round(totalPrice * 0.82))}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Service fee</Text>
-            <Text style={styles.summaryValue}>${Math.round(totalPrice * 0.1)}</Text>
+            <Text style={styles.summaryLabel}>Biaya layanan</Text>
+            <Text style={styles.summaryValue}>{formatPrice(Math.round(totalPrice * 0.1))}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Tax</Text>
-            <Text style={styles.summaryValue}>${Math.round(totalPrice * 0.08)}</Text>
+            <Text style={styles.summaryLabel}>Pajak</Text>
+            <Text style={styles.summaryValue}>{formatPrice(Math.round(totalPrice * 0.08))}</Text>
           </View>
           <View style={[styles.summaryRow, styles.summaryTotal]}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>${totalPrice}</Text>
+            <Text style={styles.totalValue}>{formatPrice(totalPrice)}</Text>
           </View>
         </Animated.View>
 
@@ -122,7 +123,7 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({
       {/* Bottom CTA */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + SPACING.md }]}>
         <AnimatedButton
-          title={`Pay $${totalPrice}`}
+          title={`Bayar ${formatPrice(totalPrice)}`}
           onPress={onConfirm}
           variant="gradient"
           size="lg"

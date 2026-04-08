@@ -53,7 +53,7 @@ const DiningScreen: React.FC = () => {
           </View>
           <Text style={styles.menuItemDesc} numberOfLines={2}>{item.description}</Text>
           <View style={styles.menuItemFooter}>
-            <Text style={styles.menuItemPrice}>${item.price}</Text>
+            <Text style={styles.menuItemPrice}>Rp {item.price.toLocaleString('id-ID')}</Text>
             <RatingStars rating={item.rating} size={11} showValue={true} />
           </View>
         </View>

@@ -38,6 +38,7 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
   const serviceFee = Math.round(subtotal * 0.12);
   const tax = Math.round(subtotal * 0.08);
   const total = subtotal + serviceFee + tax;
+  const formatPrice = (p: number) => 'Rp ' + p.toLocaleString('id-ID');
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -62,7 +63,7 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
           <View style={styles.villaInfo}>
             <Text style={styles.villaName}>{villa.name}</Text>
             <Text style={styles.resortName}>{resortName}</Text>
-            <Text style={styles.villaPrice}>${villa.pricePerNight}/night</Text>
+            <Text style={styles.villaPrice}>{formatPrice(villa.pricePerNight)}/malam</Text>
           </View>
         </Animated.View>
 
@@ -128,7 +129,7 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
               <Ionicons name={addon.icon as any} size={20} color={COLORS.primary} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.addonTitle}>{addon.title}</Text>
-                <Text style={styles.addonPrice}>+${addon.price}</Text>
+                <Text style={styles.addonPrice}>+{formatPrice(addon.price)}</Text>
               </View>
               <View style={styles.checkbox}>
                 <Ionicons name="square-outline" size={22} color={COLORS.gray300} />
@@ -141,20 +142,20 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
         <Animated.View entering={FadeInDown.delay(400)} style={styles.priceBreakdown}>
           <Text style={styles.sectionTitle}>Price Breakdown</Text>
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>${villa.pricePerNight} × {nights} nights</Text>
-            <Text style={styles.priceValue}>${subtotal}</Text>
+            <Text style={styles.priceLabel}>{formatPrice(villa.pricePerNight)} × {nights} malam</Text>
+            <Text style={styles.priceValue}>{formatPrice(subtotal)}</Text>
           </View>
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Service fee</Text>
-            <Text style={styles.priceValue}>${serviceFee}</Text>
+            <Text style={styles.priceLabel}>Biaya layanan</Text>
+            <Text style={styles.priceValue}>{formatPrice(serviceFee)}</Text>
           </View>
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Tax</Text>
-            <Text style={styles.priceValue}>${tax}</Text>
+            <Text style={styles.priceLabel}>Pajak</Text>
+            <Text style={styles.priceValue}>{formatPrice(tax)}</Text>
           </View>
           <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>${total}</Text>
+            <Text style={styles.totalValue}>{formatPrice(total)}</Text>
           </View>
         </Animated.View>
       </ScrollView>
@@ -162,11 +163,11 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
       {/* Bottom CTA */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + SPACING.md }]}>
         <View>
-          <Text style={styles.bottomTotal}>${total}</Text>
+          <Text style={styles.bottomTotal}>{formatPrice(total)}</Text>
           <Text style={styles.bottomNights}>{nights} nights · {guests} guests</Text>
         </View>
         <AnimatedButton
-          title="Proceed to Payment"
+          title="Lanjut ke Pembayaran"
           onPress={() => onProceedPayment(selectedCheckIn, selectedCheckOut, guests, total)}
           variant="gradient"
           size="lg"

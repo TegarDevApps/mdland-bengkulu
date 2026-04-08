@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
   bottomLabel: { ...TYPOGRAPHY.caption, color: COLORS.gray500 },
   bottomTotal: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
   confirmButton: { borderRadius: RADIUS.xl, overflow: 'hidden' },
-  confirmGradient: { paddingVertical: 16, alignItems: 'center' },
-  confirmText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 16 },
+  confirmGradient: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
+  confirmText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },
 });
 
 export default FnBCartScreen;

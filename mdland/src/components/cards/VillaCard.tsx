@@ -59,7 +59,7 @@ export const VillaCard: React.FC<VillaCardProps> = ({ villa, onPress, index = 0 
         </View>
         <View style={styles.footer}>
           <Text style={styles.price}>
-            ${villa.pricePerNight}<Text style={styles.priceUnit}>/night</Text>
+            Rp {villa.pricePerNight.toLocaleString('id-ID')}<Text style={styles.priceUnit}>/malam</Text>
           </Text>
           <View style={styles.bookButton}>
             <Text style={styles.bookText}>View</Text>

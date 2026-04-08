@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   Dimensions,
+  Modal,
 } from 'react-native';
 import Animated, {
   FadeInDown,
@@ -31,10 +32,10 @@ const IMAGE_HEIGHT = 380;
 const HEADER_HEIGHT = 56;
 const TABS: { label: string; icon: string }[] = [
   { label: 'Overview', icon: 'compass-outline' },
-  { label: 'Details', icon: 'list-outline' },
-  { label: 'Costs', icon: 'cash-outline' },
-  { label: 'Gallery', icon: 'images-outline' },
+  { label: 'Info', icon: 'list-outline' },
+  { label: 'Tiket', icon: 'ticket-outline' },
   { label: 'Review', icon: 'chatbubble-ellipses-outline' },
+  { label: 'Gallery', icon: 'images-outline' },
 ];
 const MOCK_REVIEWS = [
   { id: '1', name: 'Ahmad Rizky', avatar: 'https://i.pravatar.cc/100?img=11', rating: 5, date: '2 minggu lalu', text: 'Villa sangat bagus dan bersih! Pelayanan ramah, view laut yang luar biasa. Pasti akan kembali lagi.' },
@@ -68,6 +69,8 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
   const [activeTab, setActiveTab] = useState(0);
   const [liked, setLiked] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
+  const [galleryVisible, setGalleryVisible] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   const scrollHandler = useAnimatedScrollHandler({ onScroll: e => { scrollY.value = e.contentOffset.y; } });
   const carouselHandler = useAnimatedScrollHandler({ onScroll: e => { carouselScrollX.value = e.contentOffset.x; } });
@@ -302,22 +305,8 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
             </Animated.View>
           )}
 
-          {/* Gallery Tab */}
-          {activeTab === 3 && (
-            <Animated.View entering={FadeIn.duration(250)}>
-              <Text style={styles.sectionTitle}>Foto Villa</Text>
-              <View style={styles.galleryGrid}>
-                {villa.images.map((img, i) => (
-                  <Animated.View key={i} entering={FadeInDown.delay(i * 80).springify()}>
-                    <Image source={{ uri: img }} style={i === 0 ? styles.galleryHero : styles.galleryThumb} />
-                  </Animated.View>
-                ))}
-              </View>
-            </Animated.View>
-          )}
-
           {/* Review Tab */}
-          {activeTab === 4 && (
+          {activeTab === 3 && (
             <Animated.View entering={FadeIn.duration(250)}>
               <View style={styles.reviewHeader}>
                 <View>
@@ -348,8 +337,45 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
               ))}
             </Animated.View>
           )}
+
+          {/* Gallery Tab */}
+          {activeTab === 4 && (
+            <Animated.View entering={FadeIn.duration(250)}>
+              <Text style={styles.sectionTitle}>Foto Villa</Text>
+              <View style={styles.galleryGrid}>
+                {villa.images.map((img, i) => (
+                  <Animated.View key={i} entering={FadeInDown.delay(i * 80).springify()}>
+                    <Pressable onPress={() => { setGalleryIndex(i); setGalleryVisible(true); }}>
+                      <Image source={{ uri: img }} style={i === 0 ? styles.galleryHero : styles.galleryThumb} />
+                    </Pressable>
+                  </Animated.View>
+                ))}
+              </View>
+            </Animated.View>
+          )}
         </View>
       </Animated.ScrollView>
+
+      {/* Fullscreen Gallery Modal */}
+      <Modal visible={galleryVisible} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setGalleryVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <Pressable style={styles.modalClose} onPress={() => setGalleryVisible(false)}>
+            <Ionicons name="close" size={28} color={COLORS.white} />
+          </Pressable>
+          <FlatList
+            data={villa.images}
+            horizontal
+            pagingEnabled
+            initialScrollIndex={galleryIndex}
+            getItemLayout={(_, index) => ({ length: SCREEN_WIDTH, offset: SCREEN_WIDTH * index, index })}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={({ item }) => (
+              <Image source={{ uri: item }} style={styles.modalImage} resizeMode="contain" />
+            )}
+          />
+        </View>
+      </Modal>
 
       {/* ── Bottom Booking Bar ────────────────────── */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 12 }]}>
@@ -510,6 +536,9 @@ const styles = StyleSheet.create({
   bookBtn: { borderRadius: RADIUS.xl, overflow: 'hidden' },
   bookGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
   bookText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' },
+  modalClose: { position: 'absolute', top: 50, right: 20, zIndex: 10, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  modalImage: { width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2 },
 });
 
 export default VillaDetailScreen;

@@ -105,6 +105,17 @@ export interface MapMarker {
   image: string;
 }
 
+export interface Resort {
+  id: string;
+  name: string;
+  location: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  pricePerNight: number;
+  featured?: boolean;
+}
+
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
