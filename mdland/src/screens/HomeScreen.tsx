@@ -75,11 +75,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   const featuredWahana = WAHANA.slice(0, 4);
 
   const categories = [
-    { icon: 'home', label: 'Villa', color: COLORS.primary, onPress: onNavigateExplore },
-    { icon: 'restaurant', label: 'F&B', color: COLORS.accent, onPress: onNavigateFnB },
-    { icon: 'boat', label: 'Wahana', color: COLORS.teal, onPress: onNavigateWahana },
-    { icon: 'musical-notes', label: 'Events', color: COLORS.coral, onPress: onNavigateEvents },
-    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: onNavigateMap || (() => {}) },
+    { icon: 'home', label: 'Villa', color: COLORS.primary, onPress: () => onNavigateExplore() },
+    { icon: 'restaurant', label: 'F&B', color: COLORS.accent, onPress: () => onNavigateFnB() },
+    { icon: 'boat', label: 'Wahana', color: COLORS.teal, onPress: () => onNavigateWahana() },
+    { icon: 'musical-notes', label: 'Events', color: COLORS.coral, onPress: () => onNavigateEvents() },
+    { icon: 'map', label: 'Map', color: COLORS.lagoon, onPress: () => onNavigateMap?.() },
   ];
 
   const formatPrice = (price: number) => 'Rp ' + price.toLocaleString('id-ID');

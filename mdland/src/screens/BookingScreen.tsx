@@ -11,9 +11,9 @@ import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import { Villa } from '../types';
-import AnimatedButton from '../components/common/AnimatedButton';
 
 interface BookingScreenProps {
   villa: Villa;
@@ -33,6 +33,9 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
   const [nights, setNights] = useState(3);
   const [selectedCheckIn] = useState('2026-05-10');
   const [selectedCheckOut] = useState('2026-05-13');
+
+  // Calculate bottom bar height for proper padding
+  const bottomBarHeight = 90 + insets.bottom;
 
   const subtotal = villa.pricePerNight * nights;
   const serviceFee = Math.round(subtotal * 0.12);
@@ -55,7 +58,7 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: bottomBarHeight + 20 }}
       >
         {/* Villa Summary */}
         <Animated.View entering={FadeInDown.delay(100)} style={styles.villaCard}>
@@ -162,16 +165,18 @@ const BookingScreen: React.FC<BookingScreenProps> = ({
 
       {/* Bottom CTA */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + SPACING.md }]}>
-        <View>
+        <View style={styles.bottomLeft}>
           <Text style={styles.bottomTotal}>{formatPrice(total)}</Text>
           <Text style={styles.bottomNights}>{nights} nights · {guests} guests</Text>
         </View>
-        <AnimatedButton
-          title="Lanjut ke Pembayaran"
-          onPress={() => onProceedPayment(selectedCheckIn, selectedCheckOut, guests, total)}
-          variant="gradient"
-          size="lg"
-        />
+        <View style={styles.bottomRight}>
+          <Pressable onPress={() => onProceedPayment(selectedCheckIn, selectedCheckOut, guests, total)} style={styles.paymentBtn}>
+            <LinearGradient colors={COLORS.gradientOcean as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.paymentGradient}>
+              <Text style={styles.paymentText}>Pembayaran</Text>
+              <Ionicons name="arrow-forward" size={16} color={COLORS.white} />
+            </LinearGradient>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -271,12 +276,24 @@ const styles = StyleSheet.create({
 
   // Bottom
   bottomBar: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg,
+    paddingHorizontal: SPACING.md, paddingTop: SPACING.md,
     backgroundColor: COLORS.white, borderTopWidth: 1, borderTopColor: COLORS.gray100,
+    ...SHADOWS.large,
   },
-  bottomTotal: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
-  bottomNights: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2 },
+  bottomLeft: {
+    flex: 1,
+    marginRight: SPACING.sm,
+  },
+  bottomTotal: { ...TYPOGRAPHY.h4, color: COLORS.gray800, fontSize: 18 },
+  bottomNights: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2, fontSize: 11 },
+  bottomRight: {
+    flexShrink: 0,
+  },
+  paymentBtn: { borderRadius: RADIUS.lg, overflow: 'hidden' },
+  paymentGradient: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 20, paddingVertical: 12 },
+  paymentText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 14 },
 });
 
 export default BookingScreen;

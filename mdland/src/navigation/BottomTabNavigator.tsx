@@ -103,10 +103,10 @@ const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
           ),
         }}
       >
-        {() => (
+        {({ navigation }) => (
           <HomeScreen
             onNavigateVilla={onNavigateVilla}
-            onNavigateExplore={() => {}}
+            onNavigateExplore={() => navigation.navigate('Explore')}
             onNavigateEvents={onNavigateEvents}
             onNavigateEvent={onNavigateEvent}
             onNavigateSearch={onNavigateSearch}

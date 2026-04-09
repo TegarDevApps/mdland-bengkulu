@@ -73,6 +73,9 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
   const [galleryVisible, setGalleryVisible] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
+  // Calculate bottom bar height for proper padding
+  const bottomBarHeight = 90 + insets.bottom;
+
   const scrollHandler = useAnimatedScrollHandler({ onScroll: e => { scrollY.value = e.contentOffset.y; } });
   const carouselHandler = useAnimatedScrollHandler({ onScroll: e => { carouselScrollX.value = e.contentOffset.x; } });
   const onViewable = useRef(({ viewableItems }: any) => { if (viewableItems.length > 0) setImgIndex(viewableItems[0].index ?? 0); }).current;
@@ -116,7 +119,7 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 130 }}
+        contentContainerStyle={{ paddingBottom: bottomBarHeight + 20 }}
       >
         {/* ── Image Carousel ────────────────────────── */}
         <View style={styles.carouselWrapper}>
@@ -380,20 +383,20 @@ const VillaDetailScreen: React.FC<VillaDetailScreenProps> = ({ villa, resortName
 
       {/* ── Bottom Booking Bar ────────────────────── */}
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 12 }]}>
-        <View>
+        <View style={styles.bottomLeft}>
           <Text style={styles.bottomPrice}>{formatPrice(villa.pricePerNight)}</Text>
           <Text style={styles.bottomUnit}>/ malam · termasuk pajak</Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Pressable onPress={onChat} style={styles.chatFloatBtn}>
-          <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
-        </Pressable>
-        <Pressable onPress={onBook} disabled={!villa.available} style={[styles.bookBtn, !villa.available && { opacity: 0.5 }]}>
-          <LinearGradient colors={COLORS.gradientOcean as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.bookGradient}>
-            <Text style={styles.bookText}>{villa.available ? 'Pesan Sekarang' : 'Sold Out'}</Text>
-            <Ionicons name="arrow-forward" size={18} color={COLORS.white} />
-          </LinearGradient>
-        </Pressable>
+        <View style={styles.bottomRight}>
+          <Pressable onPress={onChat} style={styles.chatFloatBtn}>
+            <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
+          </Pressable>
+          <Pressable onPress={onBook} disabled={!villa.available} style={[styles.bookBtn, !villa.available && { opacity: 0.5 }]}>
+            <LinearGradient colors={COLORS.gradientOcean as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.bookGradient}>
+              <Text style={styles.bookText}>{villa.available ? 'Pesan Sekarang' : 'Sold Out'}</Text>
+              <Ionicons name="arrow-forward" size={16} color={COLORS.white} />
+            </LinearGradient>
+          </Pressable>
         </View>
       </View>
     </View>
@@ -534,19 +537,28 @@ const styles = StyleSheet.create({
   bottomBar: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: COLORS.white, paddingHorizontal: SPACING.xl, paddingTop: SPACING.md,
+    backgroundColor: COLORS.white, paddingHorizontal: SPACING.md, paddingTop: SPACING.md,
     borderTopWidth: 1, borderTopColor: COLORS.gray100,
+    ...SHADOWS.large,
   },
-  bottomPrice: { ...TYPOGRAPHY.h3, color: COLORS.gray800 },
-  bottomUnit: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2 },
+  bottomLeft: {
+    flex: 1,
+    marginRight: SPACING.sm,
+  },
+  bottomPrice: { ...TYPOGRAPHY.h4, color: COLORS.gray800, fontSize: 18 },
+  bottomUnit: { ...TYPOGRAPHY.caption, color: COLORS.gray500, marginTop: 2, fontSize: 11 },
+  bottomRight: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    flexShrink: 0,
+  },
   chatFloatBtn: {
-    width: 46, height: 46, borderRadius: 16,
+    width: 44, height: 44, borderRadius: 14,
     backgroundColor: COLORS.primary + '10', alignItems: 'center', justifyContent: 'center',
     borderWidth: 1, borderColor: COLORS.primary + '20',
   },
-  bookBtn: { borderRadius: RADIUS.xl, overflow: 'hidden' },
-  bookGradient: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 24, paddingVertical: 14 },
-  bookText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 15 },
+  bookBtn: { borderRadius: RADIUS.lg, overflow: 'hidden' },
+  bookGradient: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 20, paddingVertical: 12 },
+  bookText: { ...TYPOGRAPHY.button, color: COLORS.white, fontSize: 14 },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' },
   modalClose: { position: 'absolute', top: 50, right: 20, zIndex: 10, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
   modalImage: { width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2 },
