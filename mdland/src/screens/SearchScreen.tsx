@@ -45,35 +45,46 @@ const SearchScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
   const results = getResults();
 
-  const renderResult = ({ item, index }: any) => (
-    <Animated.View entering={FadeInDown.delay(index * 50).springify()}>
-      <Pressable style={styles.resultCard}>
-        <Image source={item.image} style={styles.resultImage} />
-        <View style={styles.resultContent}>
-          <View style={[styles.typeBadge, {
-            backgroundColor: item.type === 'villa' ? COLORS.primary + '15' :
-              item.type === 'wahana' ? COLORS.coral + '15' :
-              item.type === 'event' ? COLORS.accent + '15' : COLORS.teal + '15'
-          }]}>
-            <Text style={[styles.typeText, {
-              color: item.type === 'villa' ? COLORS.primary :
-                item.type === 'wahana' ? COLORS.coral :
-                item.type === 'event' ? COLORS.accent : COLORS.teal
+  const renderResult = ({ item, index }: any) => {
+    // Get the correct image based on item type
+    const getImage = () => {
+      if (item.type === 'villa') return item.images[0];
+      if (item.type === 'wahana') return item.image;
+      if (item.type === 'event') return item.image;
+      if (item.type === 'dining') return item.image;
+      return item.image;
+    };
+
+    return (
+      <Animated.View entering={FadeInDown.delay(index * 50).springify()}>
+        <Pressable style={styles.resultCard}>
+          <Image source={getImage() as any} style={styles.resultImage} />
+          <View style={styles.resultContent}>
+            <View style={[styles.typeBadge, {
+              backgroundColor: item.type === 'villa' ? COLORS.primary + '15' :
+                item.type === 'wahana' ? COLORS.coral + '15' :
+                item.type === 'event' ? COLORS.accent + '15' : COLORS.teal + '15'
             }]}>
-              {item.type.toUpperCase()}
+              <Text style={[styles.typeText, {
+                color: item.type === 'villa' ? COLORS.primary :
+                  item.type === 'wahana' ? COLORS.coral :
+                  item.type === 'event' ? COLORS.accent : COLORS.teal
+              }]}>
+                {item.type.toUpperCase()}
+              </Text>
+            </View>
+            <Text style={styles.resultName} numberOfLines={1}>
+              {item.name || item.title}
+            </Text>
+            <Text style={styles.resultSub} numberOfLines={1}>
+              {item.location || item.genre || item.cuisine}
             </Text>
           </View>
-          <Text style={styles.resultName} numberOfLines={1}>
-            {item.name || item.title}
-          </Text>
-          <Text style={styles.resultSub} numberOfLines={1}>
-            {item.location || item.genre || item.cuisine}
-          </Text>
-        </View>
-        <Ionicons name="chevron-forward" size={18} color={COLORS.gray300} />
-      </Pressable>
-    </Animated.View>
-  );
+          <Ionicons name="chevron-forward" size={18} color={COLORS.gray300} />
+        </Pressable>
+      </Animated.View>
+    );
+  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
